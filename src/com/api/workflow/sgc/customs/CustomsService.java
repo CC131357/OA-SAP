@@ -34,26 +34,26 @@ public class CustomsService {
         }
         try {
             WorkflowServiceImpl client=new WorkflowServiceImpl();
-            WorkflowRequestInfo requestInfo=new WorkflowRequestInfo();
-            requestInfo.setCanView(true);
-            requestInfo.setCanEdit(true);
+            WorkflowRequestInfo requestInfo=new WorkflowRequestInfo();//创建工作流信息
+            requestInfo.setCanView(true);//显示
+            requestInfo.setCanEdit(true);//可编辑
             SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
             Date d= new Date();
-            String strDate = sdf.format(d);
-            requestInfo.setRequestName(String.format("海关申报与运费申请流程-%s-%s",model.getUserName(),strDate));
-            requestInfo.setRequestLevel("0");
-            requestInfo.setCreatorId(userModel.getId().toString());
-            WorkflowBaseInfo baseInfo=new WorkflowBaseInfo();
-            baseInfo.setWorkflowId(CUSTOMSWFID);
-            baseInfo.setWorkflowName("海关申报与运费申请流程");
-            baseInfo.setWorkflowTypeName("SAP_OA流程");
+            String strDate = sdf.format(d);//格式化日期
+            requestInfo.setRequestName(String.format("海关申报与运费申请流程-%s-%s",model.getUserName(),strDate));//流程请求的标题
+            requestInfo.setRequestLevel("0");//请求重要级别 0：正常 1：重要 2：紧急
+            requestInfo.setCreatorId(userModel.getId().toString());//创建者ID 创建流程时为必输项
+            WorkflowBaseInfo baseInfo=new WorkflowBaseInfo();//创建工作流信息
+            baseInfo.setWorkflowId(CUSTOMSWFID);//流程ID
+            baseInfo.setWorkflowName("海关申报与运费申请流程");//流程名称
+            baseInfo.setWorkflowTypeName("SAP_OA流程");//流程类型名称
             requestInfo.setWorkflowBaseInfo(baseInfo);
             //main
             WorkflowMainTableInfo tableInfo=new WorkflowMainTableInfo();
-            tableInfo.setRequestRecords(generateMainRecord(model,userModel));
-            requestInfo.setWorkflowMainTableInfo(tableInfo);
+            tableInfo.setRequestRecords(generateMainRecord(model,userModel));//主表添加信息
+            requestInfo.setWorkflowMainTableInfo(tableInfo);//主表数据添加进工作流程
             //detail
-            WorkflowDetailTableInfo[] details=new WorkflowDetailTableInfo[2];
+            WorkflowDetailTableInfo[] details=new WorkflowDetailTableInfo[2];//创建两个明细表
             WorkflowDetailTableInfo d0 =new WorkflowDetailTableInfo();
             d0.setWorkflowRequestTableRecords(generateDetail1(model));
             details[0]=d0;
@@ -73,10 +73,10 @@ public class CustomsService {
         }
         return apiResult;
     }
-    WorkflowRequestTableRecord[] generateMainRecord(ApplyModel model,UserModel userModel){
-        WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[1];
+    WorkflowRequestTableRecord[] generateMainRecord(ApplyModel model,UserModel userModel){//主表添加信息方法
+        WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[1];//主表只有一条数据，
         records[0]=new WorkflowRequestTableRecord();
-        WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[26];
+        WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[26];//创建主表字段存储数组
         tableFields[0]=Utils.generateFeild("sqdh",model.getFormNo());
         tableFields[1]=Utils.generateFeild("sqr",model.getApplicant());
         tableFields[2]=Utils.generateFeild("sqsj",model.getApplyDate());
@@ -110,25 +110,25 @@ public class CustomsService {
         records[0].setWorkflowRequestTableFields(tableFields);
         return records;
     }
-    WorkflowRequestTableRecord[] generateDetail1(ApplyModel model){
-        List<ApplyModel.Declaration> lst=model.getDeclarationList();
-        WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];
-        for(Integer i=0;i<lst.size();i++){
-            WorkflowRequestTableRecord record =new WorkflowRequestTableRecord();
-            WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[7];
-            tableFields[0]= Utils.generateFeild("cs",lst.get(i).getLayer());
+    WorkflowRequestTableRecord[] generateDetail1(ApplyModel model){//明细表1添加数据方法
+        List<ApplyModel.Declaration> lst=model.getDeclarationList();//获取明细表1的行数
+        WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];//根据行数创建对应行数据存储容器
+        for(Integer i=0;i<lst.size();i++){//遍历明细表1的行数，将对应的行数据插入明细表中
+            WorkflowRequestTableRecord record =new WorkflowRequestTableRecord();//创建对应行数据存储的容器
+            WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[7];//明细表1每行字段个数
+            tableFields[0]= Utils.generateFeild("cs",lst.get(i).getLayer());//明细字段添加进表中
             tableFields[1]= Utils.generateFeild("sl",lst.get(i).getNum());
             tableFields[2]= Utils.generateFeild("jz",lst.get(i).getNetWeight());
             tableFields[3]= Utils.generateFeild("mz",lst.get(i).getGrossWeight());
             tableFields[4]= Utils.generateFeild("je",lst.get(i).getAmountMoney());
             tableFields[5]= Utils.generateFeild("js",lst.get(i).getPieceNum());
             tableFields[6]= Utils.generateFeild("bz",lst.get(i).getRemark());
-            record.setWorkflowRequestTableFields(tableFields);
+            record.setWorkflowRequestTableFields(tableFields);//将此时遍历的行数数据插入行数容器
             records[i]=record;
         }
         return records;
     }
-    WorkflowRequestTableRecord[] generateDetail2(ApplyModel model){
+    WorkflowRequestTableRecord[] generateDetail2(ApplyModel model){//明细表2添加数据方法
         List<ApplyModel.Logistics> lst=model.getLogisticsList();
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];
         for(Integer i=0;i<lst.size();i++){
