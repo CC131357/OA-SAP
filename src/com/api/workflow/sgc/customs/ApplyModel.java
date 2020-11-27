@@ -1,10 +1,5 @@
 package com.api.workflow.sgc.customs;
 
-import com.api.workflow.sgc.utils.Utils;
-import com.sun.media.jai.opimage.PatternRIF;
-import jdk.nashorn.internal.objects.annotations.Getter;
-
-import java.security.Principal;
 import java.util.List;
 
 public class ApplyModel {
