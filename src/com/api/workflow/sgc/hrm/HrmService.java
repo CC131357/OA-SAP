@@ -2,15 +2,6 @@ package com.api.workflow.sgc.hrm;
 
 import weaver.conn.RecordSetDataSource;
 import weaver.general.Util;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Context;
-
-import java.util.ArrayList;
-import java.util.Vector;
-import java.util.function.Consumer;
-
 import static weaver.hrm.common.ReflectUtil.writeLog;
 
 /**
