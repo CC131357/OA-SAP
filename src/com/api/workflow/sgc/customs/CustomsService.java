@@ -133,7 +133,7 @@ public class CustomsService {
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];
         for(Integer i=0;i<lst.size();i++){
             WorkflowRequestTableRecord record =new WorkflowRequestTableRecord();
-            WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[7];
+            WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[3];
             tableFields[0]= Utils.generateFeild("yflx",lst.get(i).getTransit());
             tableFields[1]= Utils.generateFeild("ysgs",lst.get(i).getCompany());
             tableFields[2]= Utils.generateFeild("fyyg",lst.get(i).getCost());
