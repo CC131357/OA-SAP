@@ -1,5 +1,6 @@
 package com.api.workflow.sgc.customs;
 
+import com.api.workflow.sgc.utils.Utils;
 import com.sun.media.jai.opimage.PatternRIF;
 import jdk.nashorn.internal.objects.annotations.Getter;
 
@@ -239,6 +240,42 @@ public class ApplyModel {
         String amountMoney;
         String pieceNum;
         String remark;
+        String section;
+        String tinPlate;
+        String impedanceBar;
+        String module;
+
+        public String getSection() {
+            return section;
+        }
+
+        public void setSection(String section) {
+            this.section = section;
+        }
+
+        public String getTinPlate() {
+            return tinPlate;
+        }
+
+        public void setTinPlate(String tinPlate) {
+            this.tinPlate = tinPlate;
+        }
+
+        public String getImpedanceBar() {
+            return impedanceBar;
+        }
+
+        public void setImpedanceBar(String impedanceBar) {
+            this.impedanceBar = impedanceBar;
+        }
+
+        public String getModule() {
+            return module;
+        }
+
+        public void setModule(String module) {
+            this.module = module;
+        }
 
         public String getLayer() {
             return layer;
