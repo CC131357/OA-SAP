@@ -13,6 +13,9 @@ import java.util.function.Consumer;
 
 import static weaver.hrm.common.ReflectUtil.writeLog;
 
+/**
+ * 根据工号读取流程所需的基础信息
+ */
 public class HrmService {
     public UserModel getUser(String userNo){
         UserModel u=null;
