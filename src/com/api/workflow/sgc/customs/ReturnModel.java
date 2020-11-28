@@ -22,11 +22,17 @@ public class ReturnModel {
     private String wayOfSolution;//处理方案
     private String sumAmount;//扣款总金额
     private String returnItem;//扣款项目
+    private String PCBA;
+    private String PCB;
+    private String repair;
+    private String freight;
+    private String other;
+    private String customerDN;
     private String returnTimes;//扣款倍数
     private String results;//处理结果
     private String remark;//备注
     //private String process;//相关流程
-    //private String appendix;//相关附件
+    private String appendix;//相关附件
     //private String document;//相关文档
 
     public String getUserNo() {
@@ -221,13 +227,65 @@ public class ReturnModel {
         this.remark = remark;
     }
 
-/*    public String getProcess() {
+    /**
+     * 扣款项目
+     */
+    public String getPCBA() {
+        return PCBA;
+    }
+
+    public void setPCBA(String PCBA) {
+        this.PCBA = PCBA;
+    }
+
+    public String getPCB() {
+        return PCB;
+    }
+
+    public void setPCB(String PCB) {
+        this.PCB = PCB;
+    }
+
+    public String getRepair() {
+        return repair;
+    }
+
+    public void setRepair(String repair) {
+        this.repair = repair;
+    }
+
+    public String getFreight() {
+        return freight;
+    }
+
+    public void setFreight(String freight) {
+        this.freight = freight;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
+    }
+
+    public String getCustomerDN() {
+        return customerDN;
+    }
+
+    public void setCustomerDN(String customerDN) {
+        this.customerDN = customerDN;
+    }
+
+    /*    public String getProcess() {
         return process;
     }
 
     public void setProcess(String process) {
         this.process = process;
-    }
+    }*/
+
 
     public String getAppendix() {
         return appendix;
@@ -237,7 +295,8 @@ public class ReturnModel {
         this.appendix = appendix;
     }
 
-    public String getDocument() {
+
+/*    public String getDocument() {
         return document;
     }
 
