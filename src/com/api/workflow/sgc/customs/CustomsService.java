@@ -76,7 +76,7 @@ public class CustomsService {
     WorkflowRequestTableRecord[] generateMainRecord(ApplyModel model,UserModel userModel){//主表添加信息方法
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[1];//主表只有一条数据，
         records[0]=new WorkflowRequestTableRecord();
-        WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[26];//创建主表字段存储数组
+        WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[22];//创建主表字段存储数组
         tableFields[0]=Utils.generateFeild("sqdh",model.getFormNo());
         tableFields[1]=Utils.generateFeild("sqr",model.getApplicant());
         tableFields[2]=Utils.generateFeild("sqsj",model.getApplyDate());
@@ -91,22 +91,18 @@ public class CustomsService {
         tableFields[11]=Utils.generateFeild("zylx",model.getShipmentType());
         tableFields[12]=Utils.generateFeild("fphm",model.getInvoiceNo());
         tableFields[13]=Utils.generateFeild("bz",model.getRemark());
-        tableFields[14]=Utils.generateFeild("qp",model.getSection());
-        tableFields[15]=Utils.generateFeild("sxb",model.getTinPlate());
-        tableFields[16]=Utils.generateFeild("zkt",model.getImpedanceBar());
-        tableFields[17]=Utils.generateFeild("mk",model.getModule());
-        tableFields[18]=Utils.generateFeild("thsbjz",model.getValueOfReturnDeclaration());
-        tableFields[19]=Utils.generateFeild("thjz",model.getValueOfReturn());
+        tableFields[14]=Utils.generateFeild("thsbjz",model.getValueOfReturnDeclaration());
+        tableFields[15]=Utils.generateFeild("thjz",model.getValueOfReturn());
         //表头部分字段
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
         Date d= new Date();
         String strDate = sdf.format(d);
-        tableFields[20]=Utils.generateFeild("shenqr",userModel.getId().toString());
-        tableFields[21]=Utils.generateFeild("zhij",userModel.getJobLevel());
-        tableFields[22]=Utils.generateFeild("gangw",userModel.getJobTitle());
-        tableFields[23]=Utils.generateFeild("shenqrq",strDate);
-        tableFields[24]=Utils.generateFeild("bum",userModel.getDepartmentId());
-        tableFields[25]=Utils.generateFeild("gongs",userModel.getSubCompanyId1());
+        tableFields[16]=Utils.generateFeild("shenqr",userModel.getId().toString());
+        tableFields[17]=Utils.generateFeild("zhij",userModel.getJobLevel());
+        tableFields[18]=Utils.generateFeild("gangw",userModel.getJobTitle());
+        tableFields[19]=Utils.generateFeild("shenqrq",strDate);
+        tableFields[20]=Utils.generateFeild("bum",userModel.getDepartmentId());
+        tableFields[21]=Utils.generateFeild("gongs",userModel.getSubCompanyId1());
         records[0].setWorkflowRequestTableFields(tableFields);
         return records;
     }
@@ -115,7 +111,7 @@ public class CustomsService {
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];//根据行数创建对应行数据存储容器
         for(Integer i=0;i<lst.size();i++){//遍历明细表1的行数，将对应的行数据插入明细表中
             WorkflowRequestTableRecord record =new WorkflowRequestTableRecord();//创建对应行数据存储的容器
-            WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[7];//明细表1每行字段个数
+            WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[11];//明细表1每行字段个数
             tableFields[0]= Utils.generateFeild("cs",lst.get(i).getLayer());//明细字段添加进表中
             tableFields[1]= Utils.generateFeild("sl",lst.get(i).getNum());
             tableFields[2]= Utils.generateFeild("jz",lst.get(i).getNetWeight());
@@ -123,6 +119,10 @@ public class CustomsService {
             tableFields[4]= Utils.generateFeild("je",lst.get(i).getAmountMoney());
             tableFields[5]= Utils.generateFeild("js",lst.get(i).getPieceNum());
             tableFields[6]= Utils.generateFeild("bz",lst.get(i).getRemark());
+            tableFields[7]=Utils.generateFeild("qp",lst.get(i).getSection());
+            tableFields[8]=Utils.generateFeild("sxb",lst.get(i).getTinPlate());
+            tableFields[9]=Utils.generateFeild("zkt",lst.get(i).getImpedanceBar());
+            tableFields[10]=Utils.generateFeild("mk",lst.get(i).getModule());
             record.setWorkflowRequestTableFields(tableFields);//将此时遍历的行数数据插入行数容器
             records[i]=record;
         }
