@@ -10,7 +10,5 @@
     <orderEntry type="library" exported="" name="weaver" level="project" />
     <orderEntry type="library" exported="" name="resin" level="project" />
     <orderEntry type="library" exported="" name="classbean" level="project" />
-    <orderEntry type="library" name="lib1" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
