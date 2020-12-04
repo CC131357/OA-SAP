@@ -4,6 +4,9 @@ import com.api.workflow.sgc.hrm.HrmService;
 import com.api.workflow.sgc.hrm.UserModel;
 import com.api.workflow.sgc.utils.ApiResult;
 import com.api.workflow.sgc.utils.Utils;
+import weaver.soa.workflow.request.Property;
+import weaver.soa.workflow.request.RequestInfo;
+import weaver.soa.workflow.request.RequestService;
 import weaver.workflow.webservices.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +22,7 @@ import java.util.List;
 public class CustomsService {
     /*海关申报与运费申请流程ID*/
     final String CUSTOMSWFID="1389";
+    RequestService requestService = new RequestService();
     @POST
     @Path("/createApply")
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,8 +68,17 @@ public class CustomsService {
             requestInfo.setWorkflowDetailTableInfos(details);
 
             String requestId= client.doCreateWorkflowRequest(requestInfo,userModel.getId());
+            RequestInfo info= requestService.getRequest(Integer.parseInt(requestId));
+            Property[] properties=info.getMainTableInfo().getProperty();
+            String workflowNo="";
+            for (Property p:properties){
+                if(p.getName().equals("liucbh")){
+                    workflowNo=p.getValue();
+                    break;
+                }
+            }
             apiResult.setStateCode("1");
-            apiResult.setMsg("requestId:"+requestId);
+            apiResult.setMsg("workflowNo:"+workflowNo);
         }catch(Exception ex){
             ex.printStackTrace();
             apiResult.setStateCode("0");
@@ -109,7 +122,7 @@ public class CustomsService {
     WorkflowRequestTableRecord[] generateDetail1(ApplyModel model){//明细表1添加数据方法
         List<ApplyModel.Declaration> lst=model.getDeclarationList();//获取明细表1的行数
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];//根据行数创建对应行数据存储容器
-        for(Integer i=0;i<lst.size();i++){//遍历明细表1的行数，将对应的行数据插入明细表中
+        for(int i=0;i<lst.size();i++){//遍历明细表1的行数，将对应的行数据插入明细表中
             WorkflowRequestTableRecord record =new WorkflowRequestTableRecord();//创建对应行数据存储的容器
             WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[11];//明细表1每行字段个数
             tableFields[0]= Utils.generateFeild("cs",lst.get(i).getLayer());//明细字段添加进表中
@@ -131,7 +144,7 @@ public class CustomsService {
     WorkflowRequestTableRecord[] generateDetail2(ApplyModel model){//明细表2添加数据方法
         List<ApplyModel.Logistics> lst=model.getLogisticsList();
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];
-        for(Integer i=0;i<lst.size();i++){
+        for(int i=0;i<lst.size();i++){
             WorkflowRequestTableRecord record =new WorkflowRequestTableRecord();
             WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[3];
             tableFields[0]= Utils.generateFeild("yflx",lst.get(i).getTransit());
