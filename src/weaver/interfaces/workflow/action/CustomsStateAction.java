@@ -16,7 +16,6 @@ import java.util.Map;
 
 
 public class CustomsStateAction extends BaseBean implements Action {
-    final String url="http://10.10.10.31:50000/RESTAdapter/OA/S0006CustomsApproveUpdate";
     @Override
     public String execute(RequestInfo requestInfo) {
         String requestId = requestInfo.getRequestid();
@@ -42,7 +41,7 @@ public class CustomsStateAction extends BaseBean implements Action {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body);
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
-                .url(url)
+                .url(ConstUrl.customStateUrl)
                 .post(requestBody)
                 .build();
         Response response = null;
