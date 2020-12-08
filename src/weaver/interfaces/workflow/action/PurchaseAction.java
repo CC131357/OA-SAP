@@ -24,18 +24,18 @@ public class PurchaseAction  extends BaseBean implements Action  {
         for (int i = 0; i < properties.length; i++) {
             String name = properties[i].getName();// 主字段名称
             String value = Util.null2String(properties[i].getValue());// 主字段对应的值
-            if(name != null && name.equals("sqr")){
+            if(null!=name && name.equals("sqr")){
                 commonInfos.put("AFNAM",value);
-            } else if(name != null && name.equals("cbzx")){
+            } else if(null!=name && ("cbzx").equals(name)){
                 commonInfos.put("KOSTL",value);
-            } else if(name != null && name.equals("gc")){
+            } else if(null!=name && name.equals("gc")){
                 commonInfos.put("WERKS",value);
             }
         }
         Map<String, Object> tableDatas = new HashMap<>();
         DetailTable[] detailtable = requestinfo.getDetailTableInfo().getDetailTable();// 获取所有明细表
         //获取明细Ids
-        List detailIds = new ArrayList<String>();
+        List<String> detailIds = new ArrayList<String>();
         RecordSet currs=new RecordSet();
         currs.executeQuery("select fd.id from "+ mainTableName +" fd where fd.mainid = " +
                 "(select fm.id from "+ detailTableName +" fm where fm.requestid = '" + requestinfo.getRequestid() +"')");
