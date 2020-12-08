@@ -8,5 +8,9 @@ public class ConstUrl {
     public final static String reimbursementUrl=baseUrl+"OA/S0063PaymentDataTransfer";
     //退货扣款
     public final static String deductioUrl=baseUrl+"OA/S0006CustomsApproveUpdate";
+    //采购申请创建
+    public final static String purchaseUrl=baseUrl+"S0042PRcreate";
+    //差旅费用报销
+    public final static String travelExpenseUrl=baseUrl+"S0063PaymentDataTransfer";
 
 }
