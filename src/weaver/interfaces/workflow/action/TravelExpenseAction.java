@@ -105,7 +105,7 @@ public class TravelExpenseAction extends BaseBean implements Action  {
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), msg);
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
-                .url(ConstUrl.travelExpenseUrl)
+                .url(CommonUtil.travelExpenseUrl)
                 .post(body)
                 .build();
         Response response = null;

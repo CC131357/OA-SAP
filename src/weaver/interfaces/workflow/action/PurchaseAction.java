@@ -103,7 +103,7 @@ public class PurchaseAction extends BaseBean implements Action  {
         String author = "Basic " + Base64.getEncoder().encodeToString(("ZPOUSER"+":"+ "1qaz@WSX").getBytes());
         Request request = new Request.Builder()
                 .addHeader("Authorization", author)
-                .url(ConstUrl.purchaseUrl)
+                .url(CommonUtil.purchaseUrl)
                 .post(body)
                 .build();
         Response response = null;

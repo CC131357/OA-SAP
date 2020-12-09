@@ -6,14 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
 import okhttp3.*;
-import weaver.interfaces.workflow.action.Action;
 import weaver.soa.workflow.request.*;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static weaver.interfaces.workflow.action.ConstUrl.deductioUrl;
+import static weaver.interfaces.workflow.action.CommonUtil.deductioUrl;
 
 
 /**
