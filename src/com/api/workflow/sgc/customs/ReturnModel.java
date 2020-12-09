@@ -3,25 +3,26 @@ package com.api.workflow.sgc.customs;
 public class ReturnModel {
     private String userNo;
     private String userName;
-    private String appType;//申请类型
-    private String returnEngineerNo;//退货处理工程师工号
+    private String TOPSNo;//TOPS扣款单号
     private String customerNo;//客户代码
     private String returnNo;//退货单号
     private String returnDate;//退货日期
     private String customerName;//客户名称
     private String returnEngineer;//退货工程师
-    private String branchCompany;//责任分公司
+    private String branchCompany;//生产工厂
     private String productModel;//产品型号
     private String edition;//版本
     private String amountOfReturn;//退货数量
     private String areaOfReturn;//退货面积
+    private String unit;//单位
     private String currency;//币别
     private String returnType;//退货类型
     private String returnReasonExplain;//退货原因说明
     private String ReasonDescription;//退货原因描述
     private String wayOfSolution;//处理方案
-    private String sumAmount;//扣款总金额
-    private String returnItem;//扣款项目
+    private String quality; //品质扣款
+    private String freightFree;//运费扣款
+    private String sumAmount;//合计扣款
     private String PCBA;
     private String PCB;
     private String repair;
@@ -29,8 +30,8 @@ public class ReturnModel {
     private String other;
     private String customerDN;
     private String returnTimes;//扣款倍数
+    private String connectResult;//沟通结果
     private String results;//处理结果
-    private String remark;//备注
     //private String process;//相关流程
     private String appendix;//相关附件
     //private String document;//相关文档
@@ -51,20 +52,12 @@ public class ReturnModel {
         this.userName = userName;
     }
 
-    public String getAppType() {
-        return appType;
+    public String getTOPSNo() {
+        return TOPSNo;
     }
 
-    public void setAppType(String appType) {
-        this.appType = appType;
-    }
-
-    public String getReturnEngineerNo() {
-        return returnEngineerNo;
-    }
-
-    public void setReturnEngineerNo(String returnEngineerNo) {
-        this.returnEngineerNo = returnEngineerNo;
+    public void setTOPSNo(String TOPSNo) {
+        this.TOPSNo = TOPSNo;
     }
 
     public String getCustomerNo() {
@@ -147,6 +140,14 @@ public class ReturnModel {
         this.areaOfReturn = areaOfReturn;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
     public String getCurrency() {
         return currency;
     }
@@ -195,14 +196,6 @@ public class ReturnModel {
         this.sumAmount = sumAmount;
     }
 
-    public String getReturnItem() {
-        return returnItem;
-    }
-
-    public void setReturnItem(String returnItem) {
-        this.returnItem = returnItem;
-    }
-
     public String getReturnTimes() {
         return returnTimes;
     }
@@ -219,12 +212,28 @@ public class ReturnModel {
         this.results = results;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getQuality() {
+        return quality;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setQuality(String quality) {
+        this.quality = quality;
+    }
+
+    public String getFreightFree() {
+        return freightFree;
+    }
+
+    public void setFreightFree(String freightFree) {
+        this.freightFree = freightFree;
+    }
+
+    public String getConnectResult() {
+        return connectResult;
+    }
+
+    public void setConnectResult(String connectResult) {
+        this.connectResult = connectResult;
     }
 
     /**
