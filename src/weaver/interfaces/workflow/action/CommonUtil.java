@@ -22,7 +22,7 @@ public class CommonUtil {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), content);
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
-                .url(CommonUtil.customStateUrl)
+                .url(url)
                 .post(requestBody)
                 .build();
         Response response = null;
