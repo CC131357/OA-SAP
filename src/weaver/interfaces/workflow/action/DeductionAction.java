@@ -24,6 +24,7 @@ public class DeductionAction extends BaseBean implements Action {
     @Override
     public String execute(RequestInfo requestInfo) {
         JSONObject jsonObj =new JSONObject();
+        jsonObj.put( "I_TESTRUN","X");
         //获取主表信息、初始化主表
         Map<String, String> mid=getPropertyMap(requestInfo.getMainTableInfo().getProperty());
         String KUNAG=Util.null2String(mid.get("khdm"));  //客户代码
@@ -108,18 +109,16 @@ public class DeductionAction extends BaseBean implements Action {
         String shuju = jsonObj.toString();
         JSONObject database = null;
         try {
-            database = CommonUtil.Post(CommonUtil.masterCustomUrl,shuju);
+            database = CommonUtil.Post(CommonUtil.deductioUrl,shuju);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*String e_code = database.getString("E_CODE");
-        JSONArray et_data = database.getJSONArray("ET_DATA");*/
-        //JSONObject one = database.getJSONObject("MT_PaymentDataTransfer_Out_Resp");
         String e_code = database.getString("E_CODE");
         String e_msg = database.getString("E_MSG");
         if ("S".equals(e_code)){
             //表示数据传输成功，正常提交
             System.out.println("成功");
+
             return SUCCESS;
         }else{
             //数据传输失败，则将错误信息返回到页面
