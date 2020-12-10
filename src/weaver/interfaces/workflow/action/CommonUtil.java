@@ -17,6 +17,8 @@ public class CommonUtil {
     public final static String purchaseUrl=baseUrl+"OA/S0042PRcreate";
     //差旅费用报销
     public final static String travelExpenseUrl=baseUrl+"OA/S0063PaymentDataTransfer";
+    //客户信用特批
+    public final static String cMCreditApproveUrl=baseUrl+"OA/S0004CMCreditApprove";
     //外部ECN
     public final static String OECNUrl=baseUrl+"OA/S0125ECNcatCreate";
     //客户主数据
