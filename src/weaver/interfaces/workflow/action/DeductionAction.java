@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
 import okhttp3.*;
+import weaver.conn.RecordSetDataSource;
 import weaver.interfaces.workflow.action.Action;
 import weaver.soa.workflow.request.*;
 
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static weaver.interfaces.workflow.action.ConstUrl.deductioUrl;
+import static weaver.interfaces.workflow.action.ConstUrl.masterCustom;
 
 
 /**
@@ -21,47 +23,24 @@ import static weaver.interfaces.workflow.action.ConstUrl.deductioUrl;
  * @流程名称 退货扣款订单创建流程
  */
 public class DeductionAction extends BaseBean implements Action {
-    //public static final String REQUESTPATH = "http://10.10.10.31:50000/RESTAdapter/OA/S0008PaymentSOCreate";
     @Override
     public String execute(RequestInfo requestInfo) {
         JSONObject jsonObj =new JSONObject();
         //获取主表信息、初始化主表
         Map<String, String> mid=getPropertyMap(requestInfo.getMainTableInfo().getProperty());
         String BUKRS=Util.null2String(mid.get("gsdm"));  //公司代码
-        String ZOADJ=Util.null2String(mid.get("liucbh")); //流程编号
-        String LIFNR = Util.null2String(mid.get("gyshzqrzh")); //供应商或债权人账户
-        String ZDJLX = "报销"; //单据类型
+        String ZOABH =Util.null2String(mid.get("liucbh")); //流程编号
+        String KUNNR = Util.null2String(mid.get("khdm")); //客户代码
+        JSONObject detailOne =new JSONObject();
+        detailOne.put("KUNNR","");
+        String msg = detailOne.toString();
         String ZLSCH = Util.null2String(mid.get("fkfs"));//付款方式
         String BVTYP = Util.null2String(mid.get("zhxz")); //账户选择
         String WRBTR=Util.null2String(mid.get("zhaodfyzj")); //合计金额（人民币）
-        //获取明细表信息
-        DetailTable[] detailtable = requestInfo.getDetailTableInfo().getDetailTable();
-        DetailTable xm1 = detailtable[0];// 指定明细表1
-        Row[] sxm1 = xm1.getRow();// 当前明细表的所有数据,按行存储
-        Row r1 = sxm1[0];// 指定第一行
-        Cell co[] = r1.getCell();//行按列存
         JSONObject detailtObject = new  JSONObject();
-        for (int k = 0; k < co.length; k++) {
-            Cell c1 = co[k];// 指定列
-            String name = c1.getName();// 明细字段名称
-            String value = c1.getValue();// 明细字段的值
-            if(name.equals("hjkm")){
-                detailtObject.put("HKONT",value);//会计科目
-            }
-            if (name.equals("cbzx")){
-                detailtObject.put("KOSTL",value); //成本中心
-            }
-            if (name.equals("fysm")){
-                detailtObject.put("BKTXT",value);  //费用说明-凭证抬头文本
-            }
-            if (name.equals("bb")){
-                detailtObject.put("WAERS",value); //币别-货币码
-            }
-        }
         detailtObject.put("BUKRS",BUKRS);//公司代码
-        detailtObject.put("ZOADJ",ZOADJ);//OA单据类型
-        detailtObject.put("LIFNR",LIFNR);//供应商或债权人账号
-        detailtObject.put("ZDJLX",ZDJLX);//单据类型
+        detailtObject.put("ZOABH",ZOABH);//OA单据类型
+        detailtObject.put("AUART","ZRD");//订单类型
         detailtObject.put("BVTYP",BVTYP);//账户选择
         detailtObject.put("WRBTR",WRBTR);//费用金额
         detailtObject.put("ZLSCH",ZLSCH);//付款方式
