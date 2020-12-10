@@ -17,12 +17,16 @@ public class CommonUtil {
     public final static String purchaseUrl=baseUrl+"OA/S0042PRcreate";
     //差旅费用报销
     public final static String travelExpenseUrl=baseUrl+"OA/S0063PaymentDataTransfer";
+    //外部ECN
+    public final static String OECNUrl=baseUrl+"OA/S0125ECNcatCreate";
+    //客户主数据
+    public final static String masterCustomUrl=baseUrl+"OA/S0002CMget";
     public static JSONObject Post(String url, String content) throws IOException,JSONException{
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), content);
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
-                .url(CommonUtil.customStateUrl)
+                .url(url)
                 .post(requestBody)
                 .build();
         Response response = null;

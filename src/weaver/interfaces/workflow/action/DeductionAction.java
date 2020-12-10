@@ -108,26 +108,12 @@ public class DeductionAction extends BaseBean implements Action {
         System.out.println(vbapArray);
         jsonObj.put("IS_VBAK",vbakObject);//添加第二个
         String shuju = jsonObj.toString();
-        OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), shuju);
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
-                .url(deductioUrl)
-                .post(body)
-                .build();
-        Response response = null;
+        JSONObject database = null;
         try {
-            response = client.newCall(request).execute();
+            database = CommonUtil.Post(CommonUtil.masterCustomUrl,shuju);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String data = null;
-        try {
-            data = response.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        JSONObject database = JSONObject.parseObject(data);
         /*String e_code = database.getString("E_CODE");
         JSONArray et_data = database.getJSONArray("ET_DATA");*/
         //JSONObject one = database.getJSONObject("MT_PaymentDataTransfer_Out_Resp");

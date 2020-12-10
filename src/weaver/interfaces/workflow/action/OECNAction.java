@@ -35,7 +35,7 @@ public class OECNAction extends BaseBean implements Action {
         String shuju = jsonObj.toString();
         JSONObject result = null;
         try {
-             result= CommonUtil.Post(CommonUtil.masterCustomUrl,shuju);
+             result= CommonUtil.Post(CommonUtil.OECNUrl,shuju);
             String code=result.getString("E_CODE");
             requestInfo.getRequestManager().setMessage(result.getString("E_MSG"));
             if(code.equals("S")){
