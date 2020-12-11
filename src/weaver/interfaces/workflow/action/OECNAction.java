@@ -2,6 +2,7 @@ package weaver.interfaces.workflow.action;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
@@ -27,63 +28,47 @@ public class OECNAction extends BaseBean implements Action {
         String requestId = requestInfo.getRequestid();
         //获取主表信息、初始化主表
         Map<String, String> mid=getPropertyMap(requestInfo.getMainTableInfo().getProperty());
-        String BUKRS=Util.null2String(mid.get("gsdm"));  //公司代码
-        String ZOADJ=Util.null2String(mid.get("liucbh")); //流程编号
-
-        //获取明细表信息
-        DetailTable[] detailtable = requestInfo.getDetailTableInfo().getDetailTable();
-        DetailTable xm1 = detailtable[1];// 指定明细表2
-        Row[] sxm1 = xm1.getRow();// 当前明细表的所有数据,按行存储
-        Row r1 = sxm1[0];// 指定行
-        Cell co[] = r1.getCell();//行按列存
-        JSONObject detailtObject = new  JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        detailtObject.put("BUKRS",BUKRS);//公司代码
-        detailtObject.put("ZOADJ",ZOADJ);//OA单据类型
-        jsonArray.add(detailtObject);
-        System.out.println(jsonArray);
-        jsonObj.put("IT_DATA",jsonArray);
+        String MATNR=Util.null2String(mid.get("dqcpxh"));  //当前产品型号
+        JSONObject js = new JSONObject();
+        js.put("MATNR",MATNR);
+        jsonObj.put("IS_INPUT",js);
         String shuju = jsonObj.toString();
-        OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), shuju);
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
-                .url(REQUESTPATH)
-                .post(body)
-                .build();
-        Response response = null;
+        JSONObject result = null;
         try {
-            response = client.newCall(request).execute();
+             result= CommonUtil.Post(CommonUtil.OECNUrl,shuju);
+            String code=result.getString("E_CODE");
+            requestInfo.getRequestManager().setMessage(result.getString("E_MSG"));
+            if(code.equals("S")){
+                return SUCCESS;
+            }else if(code.equals("E")){
+                return FAILURE_AND_CONTINUE;
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            writeLog(e.getMessage());
+            requestInfo.getRequestManager().setMessage(e.getMessage());
+        }catch (JSONException e){
+            writeLog(e.getMessage());
+            requestInfo.getRequestManager().setMessage(e.getMessage());
         }
-        String data = null;
-        try {
-            data = response.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        JSONObject database = JSONObject.parseObject(data);
-        String e_code = database.getString("E_CODE");
-        String e_msg = database.getString("E_MSG");
+        String e_code = result.getString("E_CODE");
+        String e_msg = result.getString("E_MSG");
         if ("S".equals(e_code)){
             //表示数据传输成功，正常提交
             System.out.println("成功");
+
             //获取新的型号
             RecordSetDataSource rsds = new RecordSetDataSource("OA");
             rsds.executeSql("update formtable_main_251 set dqcpxh ='"+123+"'where = '"+requestId+"'");
             return SUCCESS;
         }else{
             //数据传输失败，则将错误信息返回到页面
-            JSONArray et_data = database.getJSONArray("ET_DATA");
-            JSONObject et_datainfo = et_data.getJSONObject(0);
             writeLog("费用报销流程的接口回传信息," +
                     "创建人【"+requestInfo.getCreatorid()+"】" +
                     "流程id【"+requestInfo.getWorkflowid()+"】" +
                     "流程请求id【"+requestInfo.getRequestid()+"】" +
                     "当前节点【"+requestInfo.getRequestManager().getNodeid()+"】" +
-                    "请求标题【"+requestInfo.getRequestManager().getRequestname()+"】"+
-                    "返回信息【"+et_datainfo.toJSONString()+"】");
+                    "请求标题【"+requestInfo.getRequestManager().getRequestname()+"】"
+            );
 
             requestInfo.getRequestManager().setMessageid("99999");
             requestInfo.getRequestManager().setMessagecontent(e_msg.toString());
