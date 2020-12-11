@@ -135,6 +135,7 @@ public class ReturnService {
         tableFields[33]=Utils.generateFeild("bum",userModel.getDepartmentId());
         tableFields[34]=Utils.generateFeild("gongs",userModel.getSubCompanyId1());
         tableFields[35]=Utils.generateFeild("ldgx",ldgx);
+        tableFields[36]=Utils.generateFeild("biaotfb","11");
         records[0].setWorkflowRequestTableFields(tableFields);
         return records;
     }
