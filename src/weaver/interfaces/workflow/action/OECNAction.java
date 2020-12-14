@@ -31,7 +31,7 @@ public class OECNAction extends BaseBean implements Action {
         String shuju = jsonObj.toString();
         JSONObject result = null;
         try {
-            result = CommonUtil.Post(CommonUtil.MaterialUrl,shuju);
+            result = CommonUtil.Post(CommonUtil.OECNUrl,shuju);
         } catch (IOException e) {
             e.printStackTrace();
         }
