@@ -1,21 +1,16 @@
 package weaver.interfaces.workflow.action;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONException;
+
 import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
-import okhttp3.*;
 import weaver.conn.RecordSetDataSource;
-import weaver.interfaces.workflow.action.Action;
 import weaver.soa.workflow.request.*;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static weaver.interfaces.workflow.action.CommonUtil.reimbursementUrl;
 
 
 /**
@@ -23,7 +18,6 @@ import static weaver.interfaces.workflow.action.CommonUtil.reimbursementUrl;
  * @流程名称 外部ECN流程
  */
 public class OECNAction extends BaseBean implements Action {
-    public static final String REQUESTPATH = "http://10.10.10.31:50000/RESTAdapter/OA/S0063PaymentDataTransfer";
     @Override
     public String execute(RequestInfo requestInfo) {
         JSONObject jsonObj =new JSONObject();
@@ -41,8 +35,6 @@ public class OECNAction extends BaseBean implements Action {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*String e_code = database.getString("E_CODE");
-        JSONArray et_data = database.getJSONArray("ET_DATA");*/
         String e_code = result.getString("E_CODE");
         if ("S".equals(e_code)){
             //表示数据传输成功，正常提交
