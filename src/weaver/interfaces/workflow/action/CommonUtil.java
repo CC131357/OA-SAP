@@ -23,6 +23,9 @@ public class CommonUtil {
     public final static String OECNUrl=baseUrl+"OA/S0125ECNcatCreate";
     //客户主数据
     public final static String masterCustomUrl=baseUrl+"OA/S0002CMget";
+    //订金特批
+    public final static String despositApproUrl=baseUrl+"OA/S0008PaymentSOCreate";
+
     public static JSONObject Post(String url, String content) throws IOException,JSONException{
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), content);
