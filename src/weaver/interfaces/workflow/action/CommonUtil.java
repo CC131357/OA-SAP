@@ -13,6 +13,8 @@ public class CommonUtil {
     public final static String reimbursementUrl=baseUrl+"OA/S0063PaymentDataTransfer";
     //退货扣款
     public final static String deductioUrl=baseUrl+"OA/S0008PaymentSOCreate";
+    //凭证创建
+    public final static String voucherUrl=baseUrl+"OA/S0062AccDocCreate";
     //采购申请创建
     public final static String purchaseUrl=baseUrl+"OA/S0042PRcreate";
     //差旅费用报销
