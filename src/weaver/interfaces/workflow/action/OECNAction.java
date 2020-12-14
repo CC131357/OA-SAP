@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static weaver.interfaces.workflow.action.CommonUtil.reimbursementUrl;
+
 
 /**
  * @author gongchen
@@ -35,45 +37,39 @@ public class OECNAction extends BaseBean implements Action {
         String shuju = jsonObj.toString();
         JSONObject result = null;
         try {
-             result= CommonUtil.Post(CommonUtil.OECNUrl,shuju);
-            String code=result.getString("E_CODE");
-            requestInfo.getRequestManager().setMessage(result.getString("E_MSG"));
-            if(code.equals("S")){
-                return SUCCESS;
-            }else if(code.equals("E")){
-                return FAILURE_AND_CONTINUE;
-            }
+            result = CommonUtil.Post(CommonUtil.MaterialUrl,shuju);
         } catch (IOException e) {
-            writeLog(e.getMessage());
-            requestInfo.getRequestManager().setMessage(e.getMessage());
-        }catch (JSONException e){
-            writeLog(e.getMessage());
-            requestInfo.getRequestManager().setMessage(e.getMessage());
+            e.printStackTrace();
         }
+        /*String e_code = database.getString("E_CODE");
+        JSONArray et_data = database.getJSONArray("ET_DATA");*/
         String e_code = result.getString("E_CODE");
-        String e_msg = result.getString("E_MSG");
         if ("S".equals(e_code)){
             //表示数据传输成功，正常提交
             System.out.println("成功");
-
-            //获取新的型号
+            JSONObject data = result.getJSONObject("OS_OUTPUT");
+            String ZMATNR_N = data.getString("ZMATNR_N");//新产品型号
+            String VERID = data.getString("VERID");//当前就版本
             RecordSetDataSource rsds = new RecordSetDataSource("OA");
-            rsds.executeSql("update formtable_main_251 set dqcpxh ='"+123+"'where = '"+requestId+"'");
+            rsds.executeSql("update formtable_main_251 set xcpxh='" + ZMATNR_N + "',jbb='" + VERID + "' where requestId='" + requestId + "'");
             return SUCCESS;
+
         }else{
             //数据传输失败，则将错误信息返回到页面
-            writeLog("费用报销流程的接口回传信息," +
+            JSONObject et_datainfo = result.getJSONObject("E_MSG");
+            writeLog("员工借款接口回传信息," +
                     "创建人【"+requestInfo.getCreatorid()+"】" +
                     "流程id【"+requestInfo.getWorkflowid()+"】" +
                     "流程请求id【"+requestInfo.getRequestid()+"】" +
                     "当前节点【"+requestInfo.getRequestManager().getNodeid()+"】" +
-                    "请求标题【"+requestInfo.getRequestManager().getRequestname()+"】"
-            );
+                    "请求标题【"+requestInfo.getRequestManager().getRequestname()+"】"+
+                    "返回信息【"+et_datainfo.toJSONString()+"】");
 
             requestInfo.getRequestManager().setMessageid("99999");
-            requestInfo.getRequestManager().setMessagecontent(e_msg.toString());
+            //requestInfo.getRequestManager().setMessagecontent(e_msg.toString());
             return "333";
         }
+
     }
     /**
      * @param property
