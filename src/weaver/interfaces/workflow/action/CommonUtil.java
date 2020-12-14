@@ -25,6 +25,8 @@ public class CommonUtil {
     public final static String masterCustomUrl=baseUrl+"OA/S0002CMget";
     //订金特批
     public final static String despositApproUrl=baseUrl+"OA/S0008PaymentSOCreate";
+    //物料主数据
+    public final static String MaterialUrl=baseUrl+"SW/MaterialModify";
 
     public static JSONObject Post(String url, String content) throws IOException,JSONException{
         OkHttpClient client = new OkHttpClient();
