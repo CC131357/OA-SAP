@@ -1,6 +1,7 @@
 package weaver.interfaces.workflow.action;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -11,6 +12,8 @@ import weaver.interfaces.workflow.action.Action;
 import weaver.soa.workflow.request.*;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +60,13 @@ public class DeductionAction extends BaseBean implements Action {
         String KWMENG = Util.null2String(mid.get("tuihsl"));//数量
         String VRKME = Util.null2String(mid.get("dw"));//单位
         String scgc = Util.null2String(mid.get("scgc"));//工厂
+        String WRBTR = Util.null2String(mid.get("hejkk"));//合计扣款(凭证金额)
         String WERKS = null;//工厂
+        SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
+        SimpleDateFormat sdf1 =new SimpleDateFormat("yyyyMM" );
+        Date d= new Date();//创建格式对象获取当前日期
+        String strDate = sdf.format(d);//格式化日期2020-12-10
+        String strDate1 = sdf1.format(d);//格式化日期202012
         if (scgc.equals("0")){
             return FAILURE_AND_CONTINUE;
         }
@@ -66,17 +75,22 @@ public class DeductionAction extends BaseBean implements Action {
         }
         String kklx = Util.null2String(mid.get("kklx"));//扣款类型
         String ABRVW = null;
+        String BKTXT = null;//参考凭证文本
         if (kklx.equals("0")){
             ABRVW = "A";//PCBA扣款
+            BKTXT = strDate1+"PCBA扣款";
         }
         if (kklx.equals("1")){
             ABRVW = "B";//PCB扣款
+            BKTXT =strDate1+ "PCB扣款";
         }
         if (kklx.equals("2")){
             ABRVW = "C";//商品修理费
+            BKTXT = strDate1+"商品修理费";
         }
         if (kklx.equals("3")){
-            ABRVW = "D";//运费
+            ABRVW = strDate1+"D";//运费
+            BKTXT = "运费";
         }
         String ZKKBS = Util.null2String(mid.get("koukbs"));//扣款倍数
         String ZKKYY = Util.null2String(mid.get("tuihyy"));//扣款原因
@@ -90,7 +104,7 @@ public class DeductionAction extends BaseBean implements Action {
         vbakObject.put("BSTKD",BSTKD);//TOPS扣款单号
         vbakObject.put("BSTDK",BSTDK);//扣款日期
         vbakObject.put("WAERK",WAERK);//货币
-        jsonObj.put("IS_VBAK",vbakObject);//添加第一个jsonobject
+        jsonObj.put("IT_VBAK",vbakObject);//添加第一个jsonobject
 
         JSONObject vbapObject = new  JSONObject();//创建第二个存储结构
         vbapObject.put("POSNR","10");//行项目号
@@ -105,7 +119,7 @@ public class DeductionAction extends BaseBean implements Action {
         JSONArray vbapArray = new JSONArray();
         vbapArray.add(vbapObject);
         System.out.println(vbapArray);
-        jsonObj.put("IS_VBAK",vbakObject);//添加第二个
+        jsonObj.put("IT_VBAP",vbapArray);//添加第二个
         String shuju = jsonObj.toString();
         JSONObject database = null;
         try {
@@ -115,10 +129,78 @@ public class DeductionAction extends BaseBean implements Action {
         }
         String e_code = database.getString("E_CODE");
         String e_msg = database.getString("E_MSG");
+        /**
+         * 获取扣款订单创建结果，开始创建凭证
+         */
         if ("S".equals(e_code)){
             //表示数据传输成功，正常提交
             System.out.println("成功");
+            //获取扣款订单号
+            String E_VBELN = database.getString("E_VBELN");
+            JSONObject  voucher = new JSONObject();//凭证数据结构
+            JSONArray detailArray = new JSONArray();
+            //凭证第一条数
+            JSONObject  detail1 = new JSONObject();//记账码1
+            JSONObject  detail2 = new JSONObject();//记账码2
+            JSONObject  detail3 = new JSONObject();//记账码3
+            detail1.put("BUKRS","1000");//公司代码
+            detail1.put("BUDAT",strDate);//凭证中的过账日期
+            detail1.put("BLDAT",strDate);//凭证中的凭证日期
+            detail1.put("BLART","DG");//凭证类型
+            detail1.put("BKTXT",BKTXT);//凭证抬头文本
+            detail1.put("XBLNR",E_VBELN);//参考凭证编号
+            detail1.put("WAERK",WAERK);//货币
+            detail1.put("BSCHL","40");//过账码
+            detail1.put("KUNNR","1000");//过账码
+            //总账科目
+            if ("CNY".equals(WAERK)){
+                if (kklx.equals("0")){
+                    double zje = Double.parseDouble(WRBTR);//字符串转数字
+                    double jine1 = zje * 0.13;
+                    double jine2 = zje - jine1;
+                    detail1.put("HKON","2221010602");//总账科目1
+                    detail1.put("WRBTR",jine1);//借款金额1
 
+
+                    detail3.put("BUKRS","1000");//公司代码
+                    detail3.put("BUDAT",strDate);//凭证中的过账日期
+                    detail3.put("BLDAT",strDate);//凭证中的凭证日期
+                    detail3.put("BLART","DG");//凭证类型
+                    detail3.put("BKTXT",BKTXT);//凭证抬头文本
+                    detail3.put("XBLNR",E_VBELN);//参考凭证编号
+                    detail3.put("WAERK",WAERK);//货币
+                    detail3.put("BSCHL","40");//过账码
+                    detail3.put("HKON","6001020000");//总账科目2
+                    detail3.put("WRBTR",jine2);//借款金额2
+                    detail3.put("KUNNR","1000");//过账码
+                }
+            }
+            detail1.put("HKONT","40");
+            detail1.put("KUNNR","1000");//客户代码
+            detail1.put("WRBTR",WRBTR);//凭证金额
+            //凭证第二条数据(应收账款)
+            detail2.put("BUKRS","1000");//公司代码
+            detail2.put("BUDAT",strDate);//凭证中的过账日期
+            detail2.put("BLDAT",strDate);//凭证中的凭证日期
+            detail2.put("BLART","DG");//凭证类型
+            detail2.put("BKTXT",BKTXT);//凭证抬头文本
+            detail2.put("XBLNR",E_VBELN);//参考凭证编号
+            detail2.put("WAERK",WAERK);//货币
+            detail2.put("BSCHL","11");//过账码
+            detail1.put("KUNNR",KUNAG);//外部客户代码
+            detail2.put("WRBTR",WRBTR);//凭证金额
+            if (kklx.equals("1")){
+                detail1.put("HKON","6601012510");//总账科目1
+                detail1.put("WRBTR",WRBTR);//借款金额
+            }
+            if (kklx.equals("2")){
+                detail1.put("HKON","6601012520");//总账科目1
+                detail1.put("WRBTR",WRBTR);//借款金额
+            }
+            if (kklx.equals("3")){
+                detail1.put("HKON","6601012530");//总账科目1
+                detail1.put("WRBTR",WRBTR);//借款金额
+            }
             return SUCCESS;
         }else{
             //数据传输失败，则将错误信息返回到页面
