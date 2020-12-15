@@ -25,7 +25,7 @@ import java.util.List;
 public class InventoryService {
 
     /*盘点差异审批流程ID*/
-    final String INVENTORYWFID="14";
+    final String INVENTORYWFID="1370";
     RequestService requestService = new RequestService();
     @POST
     @Path("/createApply")
@@ -33,9 +33,9 @@ public class InventoryService {
     @Consumes(MediaType.APPLICATION_JSON)
     public ApiResult createApply(@Context HttpServletRequest request, @Context HttpServletResponse response, final InventoryModel model) {
 
-        UserModel userModel= new HrmService().getUser(model.getUSNAM());
+        UserModel userModel= new HrmService().getUser(model.getUSERNO());
         //test
-        if(userModel == null && model.getUSNAM().equals("10073700")){
+        /*if(userModel == null && model.getUSERNO().equals("10073700")){
             userModel = new UserModel();
             userModel.setId(11);
             userModel.setDepartmentId("7");
@@ -44,7 +44,7 @@ public class InventoryService {
             userModel.setSecLevel("9");
             userModel.setJobTitle("2476");
             userModel.setSubCompanyId1("3");
-        }
+        }*/
         ApiResult apiResult=new ApiResult();
         if(null==userModel){
             apiResult.setStateCode("0");
@@ -59,7 +59,7 @@ public class InventoryService {
             SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
             Date d= new Date();
             String strDate = sdf.format(d);//格式化日期
-            requestInfo.setRequestName(String.format("盘点差异申请流程-%s-%s",model.getZYL1(),strDate));//流程请求的标题
+            requestInfo.setRequestName(String.format("盘点差异申请流程-%s-%s",model.getUSERNAME(),strDate));//流程请求的标题
             requestInfo.setRequestLevel("0");//请求重要级别 0：正常 1：重要 2：紧急
             requestInfo.setCreatorId(userModel.getId().toString());//创建者ID 创建流程时为必输项
             WorkflowBaseInfo baseInfo=new WorkflowBaseInfo();//创建工作流信息
@@ -120,7 +120,7 @@ public class InventoryService {
     }
 
     WorkflowRequestTableRecord[] generateDetail(InventoryModel model){//明细表添加数据方法
-        List<InventoryModel.InventoryDetail> lst=model.getInventoryDetailsList();//获取明细表1的行数
+        List<InventoryModel.InventoryDetail> lst=model.getDETAILS();//获取明细表1的行数
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];//根据行数创建对应行数据存储容器
         for(int i=0;i<lst.size();i++){//遍历明细表1的行数，将对应的行数据插入明细表中
             WorkflowRequestTableRecord record =new WorkflowRequestTableRecord();//创建对应行数据存储的容器

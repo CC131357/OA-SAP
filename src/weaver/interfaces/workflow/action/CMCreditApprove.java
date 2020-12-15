@@ -3,10 +3,8 @@ package weaver.interfaces.workflow.action;
 import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
-import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestInfo;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class CMCreditApprove  extends BaseBean implements Action {
@@ -60,18 +58,6 @@ public class CMCreditApprove  extends BaseBean implements Action {
             requestInfo.getRequestManager().setMessagecontent("调用SAP接口失败，返回错误数据2！" + msg);
             return FAILURECODE;
         }
-    }
-
-    /**
-     * @param property
-     * @return
-     */
-    public static Map<String, String> getPropertyMap(Property[] property) {
-        Map<String, String> m = new HashMap<>();
-        for(Property p : property){
-            m.put( p.getName(), p.getValue());
-        }
-        return m;
     }
 
     /**输出打印信息*/

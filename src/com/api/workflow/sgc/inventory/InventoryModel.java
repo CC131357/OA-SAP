@@ -7,14 +7,14 @@ public class InventoryModel {
     private String id;
 
     /**申请人id*/
-    private String USNAM;
+    private String USERNO;
 
     /**用户名称*/
-    private String ZYL1;
+    private String USERNAME;
     /**盘点单号*/
     private String IBLNR;
     /**获取盘点明细*/
-    private List<InventoryDetail> InventoryDetailsList;
+    private List<InventoryDetail> DETAILS;
 
     public String getId() {
         return id;
@@ -24,20 +24,20 @@ public class InventoryModel {
         this.id = id;
     }
 
-    public String getUSNAM() {
-        return USNAM;
+    public String getUSERNO() {
+        return USERNO;
     }
 
-    public void setUSNAM(String USNAM) {
-        this.USNAM = USNAM;
+    public void setUSERNO(String USERNO) {
+        this.USERNO = USERNO;
     }
 
-    public String getZYL1() {
-        return ZYL1;
+    public String getUSERNAME() {
+        return USERNAME;
     }
 
-    public void setZYL1(String ZYL1) {
-        this.ZYL1 = ZYL1;
+    public void setUSERNAME(String USERNAME) {
+        this.USERNAME = USERNAME;
     }
 
     public String getIBLNR() {
@@ -48,12 +48,12 @@ public class InventoryModel {
         this.IBLNR = IBLNR;
     }
 
-    public List<InventoryDetail> getInventoryDetailsList() {
-        return InventoryDetailsList;
+    public List<InventoryDetail> getDETAILS() {
+        return DETAILS;
     }
 
-    public void setInventoryDetailsList(List<InventoryDetail> inventoryDetailsList) {
-        InventoryDetailsList = inventoryDetailsList;
+    public void setDETAILS(List<InventoryDetail> DETAILS) {
+        this.DETAILS = DETAILS;
     }
 
     class InventoryDetail{

@@ -6,7 +6,6 @@ import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
 import weaver.soa.workflow.request.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class TravelExpenseAction extends BaseBean implements Action  {
@@ -16,9 +15,7 @@ public class TravelExpenseAction extends BaseBean implements Action  {
         final String MESSAGEID = "99999";
         final String FAILURECODE = "333";
 
-        Map<String, Object> tableDatas = new HashMap<>();
         JSONObject jsonObj =new JSONObject();
-        String requestId = requestInfo.getRequestid();
         //获取主表信息、初始化主表
         Map<String, String> mid=CommonUtil.getPropertyMap(requestInfo.getMainTableInfo().getProperty());
         String BUKRS= Util.null2String(mid.get("gongs"));  //公司
@@ -124,20 +121,9 @@ public class TravelExpenseAction extends BaseBean implements Action  {
         }
     }
 
-    /**
-     * @param property
-     * @return
-     */
-    public static Map<String, String> getPropertyMap(Property[] property) {
-        Map<String, String> m = new HashMap<>();
-        for(Property p : property){
-            m.put( p.getName(), p.getValue());
-        }
-        return m;
-    }
 
     /**输出打印信息*/
-    public void printLog(RequestInfo requestInfo, String msg, String returnMsg){
+    private void printLog(RequestInfo requestInfo, String msg, String returnMsg){
         writeLog(msg +
                 "创建人【"+requestInfo.getCreatorid()+"】" +
                 "流程id【"+requestInfo.getWorkflowid()+"】" +
