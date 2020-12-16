@@ -4,11 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
-import okhttp3.*;
 import weaver.soa.workflow.request.*;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class TravelExpenseAction extends BaseBean implements Action  {
@@ -18,11 +15,9 @@ public class TravelExpenseAction extends BaseBean implements Action  {
         final String MESSAGEID = "99999";
         final String FAILURECODE = "333";
 
-        Map<String, Object> tableDatas = new HashMap<>();
         JSONObject jsonObj =new JSONObject();
-        String requestId = requestInfo.getRequestid();
         //获取主表信息、初始化主表
-        Map<String, String> mid=getPropertyMap(requestInfo.getMainTableInfo().getProperty());
+        Map<String, String> mid=CommonUtil.getPropertyMap(requestInfo.getMainTableInfo().getProperty());
         String BUKRS= Util.null2String(mid.get("gongs"));  //公司
         String ZOADJ=Util.null2String(mid.get("liucbh")); //流程编号
         String ZLSCH=Util.null2String(mid.get("fukfs")); //报销方式，付款方式
@@ -40,7 +35,6 @@ public class TravelExpenseAction extends BaseBean implements Action  {
         for (int j = 0; j < sDt.length; j++) {
             Row r = sDt[j];// 指定行
             Cell c[] = r.getCell();// 每行数据再按列存储
-            JSONObject detailtObject = new  JSONObject();
             for (int k = 0; k < c.length; k++) {
                 Cell c1 = c[k];// 指定列
                 String name = c1.getName();// 明细字段名称
@@ -94,76 +88,48 @@ public class TravelExpenseAction extends BaseBean implements Action  {
                 } else{
                     detailtObject.put("ZJZKK","0");//借支金额
                 }
-
                 detailArray.add(detailtObject);
             }
         }
-
         jsonObj.put("IT_DATA",detailArray);
         String msg = jsonObj.toString();
         System.out.println(msg);
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), msg);
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
-                .url(CommonUtil.travelExpenseUrl)
-                .post(body)
-                .build();
-        Response response = null;
-        try {
-            response = new OkHttpClient().newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-            requestInfo.getRequestManager().setMessageid(MESSAGEID);
-            requestInfo.getRequestManager().setMessagecontent("调用SAP接口失败，返回错误数据1！" + msg);
-            return FAILURECODE;
-        }
-        String data = null;
-        try {
-            data = response.body().string();
-        } catch (IOException e) {
+        try{
+            JSONObject database = CommonUtil.Post(CommonUtil.travelExpenseUrl,msg);
+            String e_code = database.getString("E_CODE");
+            String e_msg = database.getString("E_MSG");
+            if ("S".equals(e_code)){
+                //表示数据传输成功，正常提交
+                System.out.println("成功 !" + msg);
+                return SUCCESS;
+            }else if("E".equals(e_code)){
+                //数据传输失败，则将错误信息返回到页面
+                printLog(requestInfo, msg, database.getJSONArray("ET_DATA").getJSONObject(0).toJSONString());
+                requestInfo.getRequestManager().setMessageid(MESSAGEID);
+                requestInfo.getRequestManager().setMessagecontent(e_msg.toString() + msg);
+                return FAILURECODE;
+            } else{
+                requestInfo.getRequestManager().setMessageid(MESSAGEID);
+                requestInfo.getRequestManager().setMessagecontent("调用SAP接口失败，返回错误数据1！" + msg);
+                return FAILURECODE;
+            }
+        } catch (Exception e){
             e.printStackTrace();
             requestInfo.getRequestManager().setMessageid(MESSAGEID);
             requestInfo.getRequestManager().setMessagecontent("调用SAP接口失败，返回错误数据2！" + msg);
             return FAILURECODE;
         }
-        JSONObject database = JSONObject.parseObject(data);
-        String e_code = database.getString("E_CODE");
-        String e_msg = database.getString("E_MSG");
-        if ("S".equals(e_code)){
-            //表示数据传输成功，正常提交
-            System.out.println("成功 !" + msg);
-            return SUCCESS;
-        }else if("E".equals(e_code)){
-            //数据传输失败，则将错误信息返回到页面
-            JSONArray et_data = database.getJSONArray("ET_DATA");
-            JSONObject et_datainfo = et_data.getJSONObject(0);
-            writeLog("费用报销流程的接口回传信息," +
-                    "创建人【"+requestInfo.getCreatorid()+"】" +
-                    "流程id【"+requestInfo.getWorkflowid()+"】" +
-                    "流程请求id【"+requestInfo.getRequestid()+"】" +
-                    "当前节点【"+requestInfo.getRequestManager().getNodeid()+"】" +
-                    "请求标题【"+requestInfo.getRequestManager().getRequestname()+"】"+
-                    "返回信息【"+et_datainfo.toJSONString()+"】");
-
-            requestInfo.getRequestManager().setMessageid(MESSAGEID);
-            requestInfo.getRequestManager().setMessagecontent(e_msg.toString() + msg);
-            return FAILURECODE;
-        } else{
-            requestInfo.getRequestManager().setMessageid(MESSAGEID);
-            requestInfo.getRequestManager().setMessagecontent("调用SAP接口失败，返回错误数据3！" + msg);
-            return FAILURECODE;
-        }
     }
 
-    /**
-     * @param property
-     * @return
-     */
-    public static Map<String, String> getPropertyMap(Property[] property) {
-        Map<String, String> m = new HashMap<>();
-        for(Property p : property){
-            m.put( p.getName(), p.getValue());
-        }
-        return m;
+
+    /**输出打印信息*/
+    private void printLog(RequestInfo requestInfo, String msg, String returnMsg){
+        writeLog(msg +
+                "创建人【"+requestInfo.getCreatorid()+"】" +
+                "流程id【"+requestInfo.getWorkflowid()+"】" +
+                "流程请求id【"+requestInfo.getRequestid()+"】" +
+                "当前节点【"+requestInfo.getRequestManager().getNodeid()+"】" +
+                "请求标题【"+requestInfo.getRequestManager().getRequestname()+"】"+
+                "返回信息【"+ returnMsg +"】");
     }
 }

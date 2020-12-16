@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.*;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import weaver.soa.workflow.request.Property;
 
 public class CommonUtil {
     private final static String baseUrl="http://10.10.10.31:50000/RESTAdapter/";
@@ -29,6 +32,8 @@ public class CommonUtil {
     public final static String despositApproUrl=baseUrl+"OA/S0008PaymentSOCreate";
     //物料主数据
     public final static String MaterialUrl=baseUrl+"SW/MaterialModify";
+    //盘点差异
+    public final static String inventoryDiffUrl=baseUrl + "OA/S0051IvtryDiffApproveUpdate";
 
     public static JSONObject Post(String url, String content) throws IOException,JSONException{
         OkHttpClient client = new OkHttpClient();
@@ -46,6 +51,28 @@ public class CommonUtil {
             throw e;
         }catch (JSONException e){
             throw e;
+        }
+    }
+
+    /**
+     * 获取表单主表的值
+     * @param property
+     * @return
+     */
+    public static Map<String, String> getPropertyMap(Property[] property) {
+        Map<String, String> m = new HashMap<>();
+        for(Property p : property){
+            m.put( p.getName(), p.getValue());
+        }
+        return m;
+    }
+
+    /**截取指定长度的字符串*/
+    public static String subStringByLength(String source, int length) {
+        if(source.length() <= length){
+            return source;
+        } else{
+            return source.substring(0,length);
         }
     }
 }
