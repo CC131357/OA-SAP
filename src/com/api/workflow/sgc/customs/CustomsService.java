@@ -66,19 +66,25 @@ public class CustomsService {
             d1.setWorkflowRequestTableRecords(generateDetail2(model));
             details[1]=d1;
             requestInfo.setWorkflowDetailTableInfos(details);
-
             String requestId= client.doCreateWorkflowRequest(requestInfo,userModel.getId());
-            RequestInfo info= requestService.getRequest(Integer.parseInt(requestId));
-            Property[] properties=info.getMainTableInfo().getProperty();
-            String workflowNo="";
-            for (Property p:properties){
-                if(p.getName().equals("liucbh")){
-                    workflowNo=p.getValue();
-                    break;
+            if(requestId.equals("-7")){
+                apiResult.setStateCode("-7");
+                apiResult.setMsg("流程创建失败");
+            }else{
+                RequestInfo info= requestService.getRequest(Integer.parseInt(requestId));
+                if(null!=info){
+                    Property[] properties=info.getMainTableInfo().getProperty();
+                    String workflowNo="";
+                    for (Property p:properties){
+                        if(p.getName().equals("liucbh")){
+                            workflowNo=p.getValue();
+                            break;
+                        }
+                    }
+                    apiResult.setStateCode("1");
+                    apiResult.setMsg("workflowNo:"+workflowNo);
                 }
             }
-            apiResult.setStateCode("1");
-            apiResult.setMsg("workflowNo:"+workflowNo);
         }catch(Exception ex){
             ex.printStackTrace();
             apiResult.setStateCode("0");
