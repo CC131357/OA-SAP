@@ -29,7 +29,7 @@ public class EntertainmentAction extends BaseBean implements Action {
         String BUKRS=Util.null2String(mid.get("gsdm"));  //公司代码
         String ZOADJ=Util.null2String(mid.get("liucbh")); //流程编号
         String LIFNR = Util.null2String(mid.get("gyshzqrzh")); //供应商或债权人账户
-        String ZDJLX = "报销"; //单据类型
+        String ZDJLX = Util.null2String(mid.get("djlx"));; //单据类型
         String ZLSCH = Util.null2String(mid.get("fkfs"));//付款方式
         String BVTYP = Util.null2String(mid.get("zhxz")); //账户选择
         String WRBTR=Util.null2String(mid.get("zhaodfyzj")); //合计金额（人民币）
@@ -58,7 +58,7 @@ public class EntertainmentAction extends BaseBean implements Action {
             }
         }
         detailtObject.put("BUKRS",BUKRS);//公司代码
-        detailtObject.put("ZOADJ",ZOADJ);//OA单据类型
+        detailtObject.put("ZOADJ",ZOADJ);//OA单据
         detailtObject.put("LIFNR",LIFNR);//供应商或债权人账号
         detailtObject.put("ZDJLX",ZDJLX);//单据类型
         detailtObject.put("BVTYP",BVTYP);//账户选择

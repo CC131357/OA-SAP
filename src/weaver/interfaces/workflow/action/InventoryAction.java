@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
-import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestInfo;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryAction extends BaseBean implements Action {
@@ -56,11 +54,11 @@ public class InventoryAction extends BaseBean implements Action {
                 }
                 System.out.println("MESSAGE：" + rData1.get("MESSAGE"));
                 requestInfo.getRequestManager().setMessageid(MESSAGEID);
-                return FAILURECODE ;//return返回固定返回`SUCCESS`
+                return FAILURECODE ;
             } else{
                 printLog(requestInfo, "调用SAP失败,数据缺失,返回CODE为NULL", rData1.get("CODE").toString());
                 requestInfo.getRequestManager().setMessageid(MESSAGEID);
-                return FAILURECODE ;//return返回固定返回`SUCCESS`
+                return FAILURECODE ;
             }
         } catch (IOException e) {
             requestInfo.getRequestManager().setMessagecontent("调用SAP程序出错！" + msg);
