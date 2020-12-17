@@ -22,9 +22,9 @@ public class TravelExpenseAction extends BaseBean implements Action  {
         String ZOADJ=Util.null2String(mid.get("liucbh")); //流程编号
         String ZLSCH=Util.null2String(mid.get("fukfs")); //报销方式，付款方式
 
-        String ZDJLX = "报销"; //票据类型
         String LIFNR = Util.null2String(mid.get("gyshzqrzh")); //收款人开户行，供应商及债权人的账号
         String BVTYP = Util.null2String(mid.get("zhxz")); //收款人账号，账户选择
+        String ZDJLX = Util.null2String(mid.get("djlx")); //单据类型，票据类型
 
         //获取明细表信息
         DetailTable[] detailtable = requestInfo.getDetailTableInfo().getDetailTable();

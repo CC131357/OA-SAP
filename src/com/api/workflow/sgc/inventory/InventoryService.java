@@ -5,7 +5,6 @@ import com.api.workflow.sgc.hrm.UserModel;
 import com.api.workflow.sgc.utils.ApiResult;
 import com.api.workflow.sgc.utils.Utils;
 import weaver.soa.workflow.request.Property;
-import weaver.soa.workflow.request.RequestInfo;
 import weaver.soa.workflow.request.RequestService;
 import weaver.workflow.webservices.*;
 
@@ -25,7 +24,8 @@ import java.util.List;
 public class InventoryService {
 
     /*盘点差异审批流程ID*/
-    final String INVENTORYWFID="1370";
+    //final String INVENTORYWFID="18";//本地
+    final String INVENTORYWFID="1422";
     RequestService requestService = new RequestService();
     @POST
     @Path("/createApply")
@@ -80,8 +80,7 @@ public class InventoryService {
             requestInfo.setWorkflowDetailTableInfos(details);
 
             String requestId= new WorkflowServiceImpl().doCreateWorkflowRequest(requestInfo,userModel.getId());
-            RequestInfo info= requestService.getRequest(Integer.parseInt(requestId));
-            Property[] properties=info.getMainTableInfo().getProperty();
+            Property[] properties=requestService.getRequest(Integer.parseInt(requestId)).getMainTableInfo().getProperty();
             String workflowNo="";
             for (Property p:properties){
                 if(p.getName().equals("liucbh")){
@@ -99,7 +98,7 @@ public class InventoryService {
         return apiResult;
     }
 
-    WorkflowRequestTableRecord[] generateMainRecord(InventoryModel model, UserModel userModel){//主表添加信息方法
+    private WorkflowRequestTableRecord[] generateMainRecord(InventoryModel model, UserModel userModel){//主表添加信息方法
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[1];//主表只有一条数据，
         records[0]=new WorkflowRequestTableRecord();
         WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[7];//创建主表字段存储数组
@@ -119,7 +118,7 @@ public class InventoryService {
         return records;
     }
 
-    WorkflowRequestTableRecord[] generateDetail(InventoryModel model){//明细表添加数据方法
+    private WorkflowRequestTableRecord[] generateDetail(InventoryModel model){//明细表添加数据方法
         List<InventoryModel.InventoryDetail> lst=model.getDETAILS();//获取明细表1的行数
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[lst.size()];//根据行数创建对应行数据存储容器
         for(int i=0;i<lst.size();i++){//遍历明细表1的行数，将对应的行数据插入明细表中
