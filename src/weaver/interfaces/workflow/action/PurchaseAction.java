@@ -25,6 +25,8 @@ public class PurchaseAction extends BaseBean implements Action  {
         for(int i=0;i<detailtable.getRowCount();i++){
             Row r=detailtable.getRow(i);
             Hashtable<String,String> ht=new Hashtable<>();
+            ht.put("REQUESTID",flowNo);
+            ht.put("AFNAM",AFNAM);
             for(Cell c:r.getCell()){
                 switch (c.getName()){
                     case "id":
@@ -34,7 +36,11 @@ public class PurchaseAction extends BaseBean implements Action  {
                         ht.put("MATNR",c.getValue());
                         break;
                     case "kmlb"://科目类别
-                        ht.put("KNTTP",c.getValue());
+                        String kmlb="";
+                        if(c.getValue().equals("0")){
+                            kmlb="K";
+                        }
+                        ht.put("KNTTP",kmlb);
                         break;
                     case "costCenter"://成本中心
                         ht.put("KOSTL",c.getValue());
