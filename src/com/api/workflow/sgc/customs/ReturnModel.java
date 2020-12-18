@@ -14,7 +14,6 @@ public class ReturnModel {
     private String edition;//版本
     private String amountOfReturn;//退货数量
     private String areaOfReturn;//退货面积
-    private String unit;//单位
     private String currency;//币别
     private String returnType;//退货类型
     private String returnReasonExplain;//退货原因说明
@@ -138,14 +137,6 @@ public class ReturnModel {
 
     public void setAreaOfReturn(String areaOfReturn) {
         this.areaOfReturn = areaOfReturn;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
     }
 
     public String getCurrency() {

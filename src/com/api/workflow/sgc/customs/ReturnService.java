@@ -56,8 +56,13 @@ public class ReturnService {
             tableInfo.setRequestRecords(generateMainRecord(model,userModel));//主表添加信息
             requestInfo.setWorkflowMainTableInfo(tableInfo);//主表数据添加进工作流程
             String requestId= client.doCreateWorkflowRequest(requestInfo,userModel.getId());
-            apiResult.setStateCode("1");
-            apiResult.setMsg("requestId:"+requestId);
+            if ((Integer.parseInt(requestId))>100){
+                apiResult.setStateCode("1");
+                apiResult.setMsg("requestId:"+requestId);
+            }
+            else {
+                apiResult.setStateCode("0");
+            }
         }catch(Exception ex){
             ex.printStackTrace();
             apiResult.setStateCode("0");
@@ -69,7 +74,7 @@ public class ReturnService {
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[1];//主表只有一条数据，
         records[0]=new WorkflowRequestTableRecord();
         WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[45];//创建主表字段存储数组
-        tableFields[0]=Utils.generateFeild("dw",model.getUnit());//单位
+        tableFields[0]=Utils.generateFeild("biaotfb","11");
         tableFields[1]=Utils.generateFeild("topskkdh",model.getTOPSNo());//TOPS扣款单号
         tableFields[2]=Utils.generateFeild("khdm",model.getCustomerNo());//客户代码
         tableFields[3]=Utils.generateFeild("tuihdh",model.getReturnNo());//退款单号
@@ -106,15 +111,17 @@ public class ReturnService {
         tableFields[28]=Utils.generateFeild("cljg",model.getResults());//处理结果
         //表头部分字段
         String fileUrl = model.getAppendix();//读取多个连接拼接的字符串
-        String[] urls = fileUrl.split("\\|");//分割多个以|连接的字符串
-        if (urls.length>0){
-            for (int i=0;i<urls.length;i++){
-                File file = new File(urls[i]);//遍历读取每个字符串
-                String fileName = file.getName();
-                String suffix = fileName.substring(fileName.lastIndexOf("."));//以最后一个.来读取每个http文件的后缀名
-                String appendixName ="http:退货扣款"+ Integer.toString(i)+suffix;//拼接出想要的文件名
-                tableFields[35+i]=Utils.generateFeild("xianggfj",urls[i]);//将将每个http文件的路径存储
-                tableFields[35+i].setFieldType(appendixName);//设置附件的类型
+        if (fileUrl!=null) {
+            String[] urls = fileUrl.split("\\|");//分割多个以|连接的字符串
+            if (urls.length > 0) {
+                for (int i = 0; i < urls.length; i++) {
+                    File file = new File(urls[i]);//遍历读取每个字符串
+                    String fileName = file.getName();
+                    String suffix = fileName.substring(fileName.lastIndexOf("."));//以最后一个.来读取每个http文件的后缀名
+                    String appendixName = "http:退货扣款" + Integer.toString(i) + suffix;//拼接出想要的文件名
+                    tableFields[36 + i] = Utils.generateFeild("xianggfj", urls[i]);//将将每个http文件的路径存储
+                    tableFields[36 + i].setFieldType(appendixName);//设置附件的类型
+                }
             }
         }
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
@@ -135,7 +142,7 @@ public class ReturnService {
         tableFields[33]=Utils.generateFeild("bum",userModel.getDepartmentId());
         tableFields[34]=Utils.generateFeild("gongs",userModel.getSubCompanyId1());
         tableFields[35]=Utils.generateFeild("ldgx",ldgx);
-        tableFields[36]=Utils.generateFeild("biaotfb","11");
+
         records[0].setWorkflowRequestTableFields(tableFields);
         return records;
     }
