@@ -45,6 +45,19 @@ public class TravelExpenseAction extends BaseBean implements Action  {
                 }
             }
         }
+        //获取最后一个不为空的费用明细表索引
+        int notNullIndex = -1;
+        for(int i = detailtable.length - 2; i >= 0; i --){
+            if(detailtable[i].getRow().length > 0 ){
+                notNullIndex = i;
+                break;
+            }
+        }
+        if(notNullIndex == -1){
+            requestInfo.getRequestManager().setMessageid(MESSAGEID);
+            requestInfo.getRequestManager().setMessagecontent("差旅费用报销流程表单填写不对，报销项目没有填写！");
+            return FAILURECODE;
+        }
         //其他明细
         JSONArray detailArray = new JSONArray();
         for(int i = 0; i < detailtable.length - 1; i ++){
@@ -83,7 +96,7 @@ public class TravelExpenseAction extends BaseBean implements Action  {
 
                 detailtObject.put("ZLSCH",ZLSCH);//付款方式
 
-                if(i == detailtable.length - 2){
+                if(i == notNullIndex && j == s.length - 1){
                     detailtObject.put("ZJZKK",loan + "");//借支金额
                 } else{
                     detailtObject.put("ZJZKK","0");//借支金额
@@ -94,6 +107,7 @@ public class TravelExpenseAction extends BaseBean implements Action  {
         jsonObj.put("IT_DATA",detailArray);
         String msg = jsonObj.toString();
         System.out.println(msg);
+
         try{
             JSONObject database = CommonUtil.Post(CommonUtil.travelExpenseUrl,msg);
             String e_code = database.getString("E_CODE");
