@@ -6,13 +6,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
 import com.weaver.general.Util;
 import weaver.conn.RecordSetDataSource;
-import weaver.mobile.webservices.workflow.WorkflowMainTableInfo;
-import weaver.mobile.webservices.workflow.WorkflowRequestTableField;
-import weaver.mobile.webservices.workflow.WorkflowRequestTableRecord;
+
 import weaver.soa.workflow.request.*;
 import java.io.IOException;
+
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+
+import java.sql.Connection;
 
 
 
@@ -27,7 +31,7 @@ public class OECNAction extends BaseBean implements Action {
         String requestId = requestInfo.getRequestid();
         //获取主表信息、初始化主表
         Map<String, String> mid=getPropertyMap(requestInfo.getMainTableInfo().getProperty());
-        String MATNR=Util.null2String(mid.get("dqcpxh"));  //当前产品型号
+        String MATNR=Util.null2String(mid.get("dangqcpxh"));  //当前产品型号
         JSONObject js = new JSONObject();
         js.put("MATNR",MATNR);
         jsonObj.put("IS_INPUT",js);
@@ -38,47 +42,48 @@ public class OECNAction extends BaseBean implements Action {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String e_code = result.getString("E_CODE");
+        String e_code = result.getString("E_COE");
         if ("S".equals(e_code)){
             //表示数据传输成功，正常提交
             System.out.println("成功");
             JSONObject data = result.getJSONObject("OS_OUTPUT");
             String ZMATNR_N = data.getString("ZMATNR_N");//新产品型号
             String VERID = data.getString("VERID");//当前旧版本
-            RecordSetDataSource rsds = new RecordSetDataSource("OA");
-            rsds.executeSql("update formtable_main_251 set xcpxh='" + ZMATNR_N + "',jbb='" + VERID + "' where requestId='" + requestId + "'");
-/*            Property[] properties = requestInfo.getMainTableInfo().getProperty();// 获取表单主字段信息
-            for (int i = 0; i < properties.length; i++) {
-                String name = properties[i].getName();// 主字段名称
-                String value = Util.null2String(properties[i].getValue());// 主字段对应的值
-                if(name != null && name.equals("xcpxh")){
-                    properties[i].setValue(ZMATNR_N);
-                }
-                if(name != null && name.equals("jbb")){
-                    properties[i].setValue(VERID);
-                }
+            // 定义MySQL的数据库驱动程序
+            final String DBDRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver" ;
+            // 定义MySQL数据库的连接地址
+            final String DBURL = "jdbc:sqlserver://192.168.0.30:1433;DatabaseName=ecology" ;
+            // MySQL数据库的连接用户名
+            final String DBUSER = "bin" ;
+            // MySQL数据库的连接密码
+            final String DBPASS = "wdhbb2016" ;
+             // 所有的异常抛出
+            try {
+                Connection conn = null ;        // 数据库连接
+                Statement stmt = null ;            // 数据库操作
+                Class.forName(DBDRIVER) ;    // 加载驱动程序
+                String sql = "UPDATE formtable_main_251 SET xcpxh='"+ZMATNR_N+"', jbb='" + VERID+"' where requestId='"+requestId+"'";
+                conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
+                stmt = conn.createStatement() ;    // 实例化Statement对象
+                stmt.executeUpdate(sql) ;        // 执行数据库更新操作
+                stmt.close() ;                    // 关闭操作
+                conn.close() ;            // 数据库关闭
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+/*            RecordSetDataSource rsds = new RecordSetDataSource("OA");
+            rsds.executeSql("update formtable_main_251 set xcpxh='" + ZMATNR_N + "',jbb='" + VERID + "' where requestId='" + requestId + "'");*/
             String xcpxh=Util.null2String(mid.get("xcpxh"));  //新产品型号
             String jbb=Util.null2String(mid.get("jbb"));  //旧版本
-            if (xcpxh != null && (xcpxh.length() != 0)&&jbb != null && (jbb.length() != 0)){
-                return SUCCESS;
-            }*/
-/*            String XCPXH=Util.null2String(mid.get("xcpxh"));  //当前产品型号
-            mid.put("dqcpxh",ZMATNR_N);
-            mid.put("jbb",VERID);*/
-
-/*            WorkflowMainTableInfo workflowMainTableInfo = new WorkflowMainTableInfo();//主表
-            WorkflowRequestTableRecord[] workflowRequestTableRecord = new WorkflowRequestTableRecord[1];//主表字段只有一条记录
-            WorkflowRequestTableField[] WorkflowRequestTableField = new WorkflowRequestTableField[2];//主的2个字段
-            WorkflowRequestTableField[0] = new WorkflowRequestTableField();
-            WorkflowRequestTableField[0].setFieldName("xcpxh");//新产品型号
-            WorkflowRequestTableField[0].setFieldValue(ZMATNR_N);//值
-            WorkflowRequestTableField[0].setFieldName("jbb");//旧版本
-            WorkflowRequestTableField[0].setFieldValue(VERID);//值
-            workflowRequestTableRecord[0] = new WorkflowRequestTableRecord();
-            workflowRequestTableRecord[0].setWorkflowRequestTableFields(WorkflowRequestTableField);
-            workflowMainTableInfo.setRequestRecords(workflowRequestTableRecord);*/
             return SUCCESS;
+/*            if (xcpxh != null && (xcpxh.length() != 0)&&jbb != null && (jbb.length() != 0)){
+                return SUCCESS;
+            }else {
+                return "999";
+            }*/
+
+
+
         }else{
             //数据传输失败，则将错误信息返回到页面
             JSONObject et_datainfo = result.getJSONObject("E_MSG");

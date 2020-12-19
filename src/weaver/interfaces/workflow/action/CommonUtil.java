@@ -34,6 +34,8 @@ public class CommonUtil {
     public final static String MaterialUrl=baseUrl+"SW/MaterialModify";
     //盘点差异
     public final static String inventoryDiffUrl=baseUrl + "OA/S0051IvtryDiffApproveUpdate";
+    //物料主数据创建
+    public final static String masterMaterialUrl=baseUrl + "SW/S0036MaterialModify";
 
     public static JSONObject Post(String url, String content) throws IOException,JSONException{
         OkHttpClient client = new OkHttpClient();
