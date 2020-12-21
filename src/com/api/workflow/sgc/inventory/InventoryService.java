@@ -24,8 +24,8 @@ import java.util.List;
 public class InventoryService {
 
     /*盘点差异审批流程ID*/
-    //final String INVENTORYWFID="18";//本地
-    final String INVENTORYWFID="1422";
+    //final String INVENTORYWFID="14";//本地
+    final String INVENTORYWFID="1422";//测试
     RequestService requestService = new RequestService();
     @POST
     @Path("/createApply")
@@ -133,7 +133,15 @@ public class InventoryService {
             tableFields[6]= Utils.generateFeild("dw",lst.get(i).getMEINS());//单位
             tableFields[7]= Utils.generateFeild("zmshu",lst.get(i).getBUCHM());//账面数
             tableFields[8]=Utils.generateFeild("spshu",lst.get(i).getMENGE());//实盘数
-            tableFields[9]=Utils.generateFeild("cyshu",lst.get(i).getZCYSL());//差异数
+
+            //Sap传过来的数为类似10.01-数时，需要帮他们处理一下，处理成-10.01
+            if(lst.get(i).getZCYSL() != null && lst.get(i).getZCYSL().contains("-") &&
+                    lst.get(i).getZCYSL().charAt(lst.get(i).getZCYSL().length() - 1) == '-'){
+                tableFields[9]=Utils.generateFeild("cyshu","-" + lst.get(i).getZCYSL()
+                        .substring(0,lst.get(i).getZCYSL().length() - 1));//差异数
+            } else{
+                tableFields[9]=Utils.generateFeild("cyshu",lst.get(i).getZCYSL());//差异数
+            }
             record.setWorkflowRequestTableFields(tableFields);//将此时遍历的行数数据插入行数容器
             records[i]=record;
         }
