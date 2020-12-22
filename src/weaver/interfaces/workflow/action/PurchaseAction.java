@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.finance.weixin.toolkit.DataRow;
+import com.google.common.base.Strings;
 import com.weaver.general.Util;
 import okhttp3.*;
 import weaver.general.BaseBean;
@@ -27,11 +28,10 @@ public class PurchaseAction extends BaseBean implements Action  {
             Hashtable<String,String> ht=new Hashtable<>();
             ht.put("REQUESTID",flowNo);
             ht.put("AFNAM",AFNAM);
+            ht.put("ZOAMXID",r.getId());
+            ht.put("BSART","NB");//采购申请类型，默认值NB
             for(Cell c:r.getCell()){
                 switch (c.getName()){
-                    case "id":
-                        ht.put("ZOAMXID",c.getValue());
-                        break;
                     case "materialCode"://物料编码
                         ht.put("MATNR",c.getValue());
                         break;
@@ -78,7 +78,7 @@ public class PurchaseAction extends BaseBean implements Action  {
             JSONObject result = CommonUtil.Post(CommonUtil.purchaseUrl,body);
             JSONArray data = result.getJSONArray("E_RETURN");
             JSONObject jsonResult = data.getJSONObject(0);
-            String code= jsonResult.getString("E_CODE");
+            String code= Util.null2String(jsonResult.getString("E_CODE"));
             requestInfo.getRequestManager().setMessage(jsonResult.getString("E_MSG"));
             if(code.equals("S")){
                 return SUCCESS;
