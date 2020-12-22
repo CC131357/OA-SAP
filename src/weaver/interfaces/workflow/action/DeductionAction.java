@@ -21,11 +21,11 @@ import java.util.Map;
  * @流程名称 退货扣款订单创建流程
  */
 public class DeductionAction extends BaseBean implements Action {
-    //public static final String REQUESTPATH = "http://10.10.10.31:50000/RESTAdapter/OA/S0008PaymentSOCreate";
+    //public static final String REQUESTPATH = "http://10.10.10.32:50000/RESTAdapter/OA/S0008PaymentSOCreate";
     @Override
     public String execute(RequestInfo requestInfo) {
         JSONObject jsonObj =new JSONObject();
-        jsonObj.put( "I_TESTRUN","X");
+        jsonObj.put( "I_TESTRUN","");
         //获取主表信息、初始化主表
         Map<String, String> mid=getPropertyMap(requestInfo.getMainTableInfo().getProperty());
         String KUNAG=Util.null2String(mid.get("khdm"));  //客户代码
@@ -64,7 +64,6 @@ public class DeductionAction extends BaseBean implements Action {
         String WAERK = Util.null2String(mid.get("bibie")); //货币
         String MATNR = Util.null2String(mid.get("chanpxh")); //物料（产品型号）
         String KWMENG = Util.null2String(mid.get("tuihsl"));//数量
-        String VRKME = Util.null2String(mid.get("dw"));//单位
         String scgc = Util.null2String(mid.get("scgc"));//工厂
         String WRBTR = Util.null2String(mid.get("hejkk"));//合计扣款(凭证金额)
         String WERKS = null;//工厂
@@ -83,11 +82,11 @@ public class DeductionAction extends BaseBean implements Action {
         String ABRVW = null;
         String BKTXT = null;//参考凭证文本
         if (kklx.equals("0")){
-            ABRVW = "A";//PCBA扣款
+            ABRVW = "A";//PCB扣款
             BKTXT = strDate1+"PCB扣款";
         }
         if (kklx.equals("1")){
-            ABRVW = "B";//PCB扣款
+            ABRVW = "B";//PCBA扣款
             BKTXT =strDate1+ "PCBA扣款";
         }
         if (kklx.equals("2")){
@@ -103,7 +102,7 @@ public class DeductionAction extends BaseBean implements Action {
         JSONObject vbakObject = new  JSONObject();//创建第一个存储结构
         vbakObject.put("ZOABH",ZOABH);//OA流程编号
         vbakObject.put("AUART","ZRD");//订单类型
-        vbakObject.put("VTWEG",VTWEG);//分销渠道
+
         vbakObject.put("SPART",SPART);//产品组
         vbakObject.put("BSTKD",BSTKD);//TOPS扣款单号
         vbakObject.put("BSTDK",BSTDK);//扣款日期
@@ -113,10 +112,10 @@ public class DeductionAction extends BaseBean implements Action {
         vbapObject.put("POSNR","10");//行项目号
         vbapObject.put("MATNR",MATNR);//物料
         vbapObject.put("KWMENG",KWMENG);//数量
-        vbapObject.put("VRKME",VRKME);//单位
         vbapObject.put("PSTYV","ZRDN");//固定值
         vbapObject.put("WERKS",WERKS);//工厂
         vbapObject.put("ABRVW",ABRVW);//扣款类型
+        vbapObject.put("ZP01",WRBTR);//销售价
         vbapObject.put("ZKKBS",ZKKBS);//扣款倍数
         vbapObject.put("ZKKYY",ZKKYY);//扣款原因
         JSONArray vbapArray = new JSONArray();
@@ -127,6 +126,7 @@ public class DeductionAction extends BaseBean implements Action {
          * 创建非关联扣款订单和扣款凭证（即销售组织是香港，工厂是深圳）
          */
         if (WERKS.equals("1000")&&VKORG.equals("1000")){//如果销售组织和工厂都是深圳，
+            vbakObject.put("VTWEG",VTWEG);//分销渠道
             vbakObject.put("VKORG",VKORG);//销售组织
             vbakObject.put("KUNAG",KUNAG);//客户编码
             jsonObj.put("IS_VBAK",vbakObject);//添加第一个jsonobject
@@ -162,7 +162,7 @@ public class DeductionAction extends BaseBean implements Action {
                 detail1.put("BKTXT", BKTXT);//凭证抬头文本
                 detail1.put("XBLNR", E_VBELN);//参考凭证编号
                 detail1.put("WAERS", WAERK);//货币
-                detail1.put("BSCHL", "24");//过账码
+                detail1.put("BSCHL", "40");//过账码
                 //detail1.put("WRBTR", WRBTR);//凭证金额
                 detail1.put("KUNNR", "1000");//客户代码
                 detail1.put("SGTXT",BKTXT);//文本
@@ -180,6 +180,7 @@ public class DeductionAction extends BaseBean implements Action {
                 detail2.put("SGTXT",BKTXT);//文本
                 if (kklx.equals("1")) {//选择PCBA
                     detail1.put("HKONT", "6601012510");//总账科目1
+                    detail1.put("KOSTL","1000106");//深圳成本中心
                     detail1.put("WRBTR", WRBTR);//借款金额
                     detail2.put("HKONT", "2241030100");//贷方总账科目1
                     detailArray.add(detail1);
@@ -187,6 +188,7 @@ public class DeductionAction extends BaseBean implements Action {
                 }
                 if (kklx.equals("2")) {//选择商品修理
                     detail1.put("HKONT", "6601012520");//总账科目1
+                    detail1.put("KOSTL","1000106");//深圳成本中心
                     detail1.put("WRBTR", WRBTR);//借款金额
                     detail2.put("HKONT", "2241030100");//贷方总账科目2
                     detailArray.add(detail1);
@@ -194,6 +196,7 @@ public class DeductionAction extends BaseBean implements Action {
                 }
                 if (kklx.equals("3")) {//选择运费
                     detail1.put("HKONT", "6601012530");//总账科目1
+                    detail1.put("KOSTL","1000106");//深圳成本中心
                     detail1.put("WRBTR", WRBTR);//借款金额
                     detail2.put("HKONT", "2241030100");//贷方总账科目3
                     detailArray.add(detail1);
@@ -207,22 +210,24 @@ public class DeductionAction extends BaseBean implements Action {
                         detail1.put("HKONT", "2221010602");//总账科目1
                         detail1.put("WRBTR", jine1);//借款金额1
                         detail3.put("BUKRS", BUKRS);//公司代码
+                        detail2.put("HKONT","1122010201");//总账科目
                         detail3.put("BUDAT", strDate);//凭证中的过账日期
                         detail3.put("BLDAT", strDate);//凭证中的凭证日期
                         detail3.put("BLART", "DG");//凭证类型
                         detail3.put("BKTXT", BKTXT);//凭证抬头文本
                         detail3.put("XBLNR", E_VBELN);//参考凭证编号
-                        detail3.put("WAERK", WAERK);//货币
+                        detail3.put("WAERS", WAERK);//货币
                         detail3.put("BSCHL", "40");//过账码
                         detail3.put("HKONT", "6001020000");//总账科目2
                         detail3.put("WRBTR", jine2);//借款金额2
-                        detail3.put("KOSTL","1010106");
                         detail3.put("SGTXT",BKTXT);//文本
                         detailArray.add(detail1);
                         detailArray.add(detail2);
                         detailArray.add(detail3);
                     } else {
                         detail1.put("WRBTR", WRBTR);//借款金额
+                        detail1.put("HKONT", "6001020000");//总账科目1
+                        detail2.put("HKONT", "1122010201");//总账科目1
                         detailArray.add(detail1);
                         detailArray.add(detail2);
                     }
@@ -251,6 +256,7 @@ public class DeductionAction extends BaseBean implements Action {
             /**
              * 创建第一张客户扣香港的扣款单（即客户编码是客户，销售组织是1010）
              */
+            vbakObject.put("VTWEG",VTWEG);//分销渠道
             vbakObject.put("VKORG",VKORG);//销售组织
             vbakObject.put("KUNAG",KUNAG);//客户编码
             jsonObj.put("IS_VBAK",vbakObject);//添加第1个
@@ -330,6 +336,7 @@ public class DeductionAction extends BaseBean implements Action {
                     /**
                      * 创建第二张扣款凭证
                      */
+                    vbakObject.put("VTWEG","30");//分销渠道
                     vbakObject.put("VKORG","1000");//销售组织
                     vbakObject.put("KUNAG","1010");//客户编码
                     jsonObj.put("IS_VBAK",vbakObject);//添加第二个
@@ -345,7 +352,7 @@ public class DeductionAction extends BaseBean implements Action {
                         //表示数据传输成功，正常提交
                         System.out.println("成功");
                         //获取扣款订单号
-                        String E_VBELN2 = database.getString("E_VBELN");
+                        String E_VBELN2 = reData2.getString("E_VBELN");
                         JSONObject voucher2 = new JSONObject();//凭证数据结构
                         JSONArray detailArray2 = new JSONArray();
                         //凭证第一条数
@@ -354,7 +361,7 @@ public class DeductionAction extends BaseBean implements Action {
                         /**
                          * 创建深圳关联凭证
                          */
-                        detail21.put("BUKRS", BUKRS);//公司代码
+                        detail21.put("BUKRS", "1000");//公司代码
                         detail21.put("BUDAT", strDate);//凭证中的过账日期
                         detail21.put("BLDAT", strDate);//凭证中的凭证日期
                         detail21.put("BLART", "DG");//凭证类型
@@ -362,12 +369,12 @@ public class DeductionAction extends BaseBean implements Action {
                         detail21.put("XBLNR", E_VBELN2);//参考凭证编号
                         detail21.put("WAERS", WAERK);//货币
                         detail21.put("BSCHL", "40");//过账码
-                        detail21.put("KUNNR", "1000");//客户代码
+                        detail21.put("KUNNR", "");//客户代码
                         detail21.put("WRBTR", WRBTR);//凭证金额
-                        detail21.put("KOSTL","1010106");//香港客服组成本中心
+                        //detail21.put("KOSTL","1000106");//香港客服组成本中心
                         detail21.put("SGTXT",BKTXT);
                         //凭证第二条数据(应收账款)
-                        detail22.put("BUKRS", BUKRS);//公司代码
+                        detail22.put("BUKRS", "1000");//公司代码
                         detail22.put("BUDAT", strDate);//凭证中的过账日期
                         detail22.put("BLDAT", strDate);//凭证中的凭证日期
                         detail22.put("BLART", "DG");//凭证类型
@@ -375,7 +382,7 @@ public class DeductionAction extends BaseBean implements Action {
                         detail22.put("XBLNR", E_VBELN2);//参考凭证编号
                         detail22.put("WAERS", WAERK);//货币
                         detail22.put("BSCHL", "11");//过账码
-                        detail21.put("KUNNR", KUNAG);//外部客户代码
+                        detail22.put("KUNNR", "1010");//贷方客户代码
                         detail22.put("WRBTR", WRBTR);//凭证金额
                         detail22.put("SGTXT",BKTXT);
                         if (kklx.equals("0")) {//PCB
