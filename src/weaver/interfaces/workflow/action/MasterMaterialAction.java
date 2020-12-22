@@ -21,13 +21,7 @@ import java.util.Map;
  * 物料主数据创建
  */
 
-
 public class MasterMaterialAction extends BaseBean implements Action {
-
-    /**
-     * @作者：高梦利
-     * @流程名称 员工借款流程
-     */
     @Override
     public String execute(RequestInfo requestInfo) {
         JSONObject jsonObj =new JSONObject();
@@ -53,7 +47,7 @@ public class MasterMaterialAction extends BaseBean implements Action {
         String ZKDDW = Util.null2String(mid.get("kddw"));//宽度单位
         String ZGDDW = Util.null2String(mid.get("gddw"));//高度单位
         String ZBZGG = Util.null2String(mid.get("bzgg"));//包装规格
-        String ZSHHD = Util.null2String(mid.get("sfht"));//是否含铜
+        String ZSHHD = Util.null2String(mid.get("sfht"));//是否含铜(选择)
         String ZBANH = Util.null2String(mid.get("bh"));//板厚
         String ZBHGC = Util.null2String(mid.get("bhgc"));//板厚公差
         String ZTONH = Util.null2String(mid.get("sth"));//上铜厚
@@ -145,14 +139,14 @@ public class MasterMaterialAction extends BaseBean implements Action {
         String DISLS = Util.null2String(mid.get("pil"));//批量
 
         String EKGRP = Util.null2String(mid.get("cgz"));//采购组
-        String pcgl  = Util.null2String(mid.get("pcgl"));//批次管理
+        String pcgl  = Util.null2String(mid.get("pcgl"));//批次管理(选择)
         String XCHAR = null;
         if ("0".equals(pcgl)){
             XCHAR = "";
         }else if ("1".equals(pcgl)){
             XCHAR = "X";
         }
-        String KORDB = Util.null2String(mid.get("yqd"));//源清单
+        String KORDB = Util.null2String(mid.get("yqd"));//源清单（选择）
         String BSTMI = Util.null2String(mid.get("zxpldx"));//最小批量大小
         String BSTRF = Util.null2String(mid.get("srz"));//舍入值
         String PLIFZ = Util.null2String(mid.get("jhjhsjt"));//计划交货时间
