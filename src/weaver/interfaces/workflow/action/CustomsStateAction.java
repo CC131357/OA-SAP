@@ -2,6 +2,7 @@ package weaver.interfaces.workflow.action;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.caucho.xtpdoc.Code;
 import okhttp3.*;
 import weaver.general.BaseBean;
 import weaver.soa.workflow.request.Property;
@@ -44,9 +45,9 @@ public class CustomsStateAction extends BaseBean implements Action {
             JSONObject result= CommonUtil.Post(CommonUtil.customStateUrl,body);
             String code=result.getString("E_CODE");
             requestInfo.getRequestManager().setMessage(result.getString("E_MSG"));
-            if(code.equals("S")){
+            if("S".equals(code)){
                 return SUCCESS;
-            }else if(code.equals("E")){
+            }else if("E".equals(code)){
                 return FAILURE_AND_CONTINUE;
             }
         } catch (IOException e) {

@@ -37,7 +37,7 @@ public class PurchaseAction extends BaseBean implements Action  {
                         break;
                     case "kmlb"://科目类别
                         String kmlb="";
-                        if(c.getValue().equals("0")){
+                        if("0".equals(c.getValue())){
                             kmlb="K";
                         }
                         ht.put("KNTTP",kmlb);
@@ -78,11 +78,11 @@ public class PurchaseAction extends BaseBean implements Action  {
             JSONObject result = CommonUtil.Post(CommonUtil.purchaseUrl,body);
             JSONArray data = result.getJSONArray("E_RETURN");
             JSONObject jsonResult = data.getJSONObject(0);
-            String code= Util.null2String(jsonResult.getString("E_CODE"));
+            String code= jsonResult.getString("E_CODE");
             requestInfo.getRequestManager().setMessage(jsonResult.getString("E_MSG"));
-            if(code.equals("S")){
+            if("S".equals(code)){
                 return SUCCESS;
-            }else if(code.equals("E")){
+            }else if("E".equals(code)){
                 return FAILURE_AND_CONTINUE;
             }
         } catch (IOException e) {
