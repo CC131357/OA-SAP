@@ -28,7 +28,7 @@ public class LoanAction extends BaseBean implements Action {
         Map<String, String> mid=getPropertyMap(requestInfo.getMainTableInfo().getProperty());
 
         String ZOADJ=Util.null2String(mid.get("liucbh")); //流程编号
-        String ZDJLX = "借支"; //票据类型
+        String ZDJLX = "Z004"; //票据类型
         String WRBTR=Util.null2String(mid.get("bencjkje")); //本次借款金额
         String LIFNR = Util.null2String(mid.get("zh")); //借款人开户行
         String BVTYP = Util.null2String(mid.get("zhxz")); //借款人银行账号
