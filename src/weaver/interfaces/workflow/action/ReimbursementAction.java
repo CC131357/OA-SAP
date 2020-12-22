@@ -63,7 +63,7 @@ public class ReimbursementAction extends BaseBean implements Action {
                 Cell c1 = c[k];// 指定列
                 String name = c1.getName();// 明细字段名称
                 String value = c1.getValue();// 明细字段的值
-                if(name.equals("hjkm")){
+                if(name.equals("hjkm1")){
                     detailtObject.put("HKONT",value);//会计科目
                 }
                 if (name.equals("cbzxin")){
