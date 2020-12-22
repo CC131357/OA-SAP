@@ -2,14 +2,21 @@ package weaver.interfaces.workflow.action;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.weaver.general.BaseBean;
 import okhttp3.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import weaver.soa.workflow.request.Property;
 
-public class CommonUtil {
+import weaver.soa.workflow.request.Cell;
+import weaver.soa.workflow.request.Property;
+import weaver.soa.workflow.request.RequestInfo;
+import weaver.soa.workflow.request.Row;
+
+public class CommonUtil extends BaseBean {
     private final static String baseUrl="http://10.10.10.32:50000/RESTAdapter/";
+    //授权
+    public final static String authorization="Basic WlBPVVNFUjoxcWF6QFdTWA==";
     //海关
     public final static String customStateUrl=baseUrl+"OA/S0006CustomsApproveUpdate";
     //报销（费用报销，业务招待报销，差旅报销）
@@ -69,12 +76,63 @@ public class CommonUtil {
         return m;
     }
 
-    /**截取指定长度的字符串*/
-    public static String subStringByLength(String source, int length) {
-        if(source.length() <= length){
-            return source;
-        } else{
-            return source.substring(0,length);
+    /**往指定路径推送消息*/
+    public JSONObject Post(String url, String content, String authorization) throws IOException,JSONException{
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), content);
+        Request request = new Request.Builder()
+                .addHeader("Authorization", authorization)
+                .url(url)
+                .post(requestBody)
+                .build();
+        Response response = null;
+        try {
+            response = client.newCall(request).execute();
+            return JSONObject.parseObject(response.body().string());
+        } catch (IOException e) {
+            throw e;
+        }catch (JSONException e){
+            throw e;
         }
     }
+
+    /**将对应的值设置经Json对象中去*/
+    public JSONObject setJsonObject(Row row, Map<String,String> columnMap){
+        JSONObject detailObject = new  JSONObject();
+        Cell c[] = row.getCell();// 每行数据再按列存储
+        for (int k = 0; k < c.length; k++) {
+            String name = c[k].getName();// 明细字段名称
+            String value = c[k].getValue();// 明细字段的值
+            if(columnMap.get(name) != null){
+                detailObject.put(columnMap.get(name),value);
+            }
+        }
+        return detailObject;
+    }
+
+    /**
+     * 获取表单主表的值
+     * @param requestInfo
+     * @return
+     */
+    public Map<String, String> getMainTableMap(RequestInfo requestInfo) {
+        Property[] property = requestInfo.getMainTableInfo().getProperty();
+        Map<String, String> m = new HashMap<>();
+        for(Property p : property){
+            m.put( p.getName(), p.getValue());
+        }
+        return m;
+    }
+
+    /**输出打印信息*/
+    public void printLog(RequestInfo requestInfo, String reqMsg, String returnMsg){
+        writeLog(reqMsg +
+                "创建人【"+requestInfo.getCreatorid()+"】" +
+                "流程id【"+requestInfo.getWorkflowid()+"】" +
+                "流程请求id【"+requestInfo.getRequestid()+"】" +
+                "当前节点【"+requestInfo.getRequestManager().getNodeid()+"】" +
+                "请求标题【"+requestInfo.getRequestManager().getRequestname()+"】"+
+                "返回信息【"+ returnMsg +"】");
+    }
+
 }
