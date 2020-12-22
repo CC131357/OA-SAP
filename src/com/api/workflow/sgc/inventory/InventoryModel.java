@@ -151,12 +151,16 @@ public class InventoryModel {
             this.MENGE = MENGE;
         }
 
-        public String getZCYSL() {
-            return ZCYSL;
-        }
+        public String getZCYSL() { return ZCYSL; }
 
         public void setZCYSL(String ZCYSL) {
-            this.ZCYSL = ZCYSL;
+            //Sap传过来的数为类似10.01-数时，需要帮他们处理一下，处理成-10.01
+            if(ZCYSL != null && ZCYSL.contains("-") &&
+                    ZCYSL.charAt(ZCYSL.length() - 1) == '-'){
+                this.ZCYSL = "-" + ZCYSL.substring(0,ZCYSL.length() - 1);//差异数
+            } else{
+                this.ZCYSL = ZCYSL;
+            }
         }
     }
 }
