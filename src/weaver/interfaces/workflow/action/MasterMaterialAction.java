@@ -124,7 +124,13 @@ public class MasterMaterialAction extends BaseBean implements Action {
         String WERKS = Util.null2String(mid.get("gc"));//工厂
         String DISPO  = Util.null2String(mid.get("mrpkzz"));//MRP控制者
         String LGPRO = Util.null2String(mid.get("scccdd"));//生产仓储地点
-        String RGEKZ = Util.null2String(mid.get("fc"));//反冲
+        String fc  = Util.null2String(mid.get("fc"));//反冲
+        String RGEKZ=null;
+        if ("0".equals(fc)){
+            RGEKZ = "";
+        }else if ("1".equals(fc)){
+            RGEKZ = "1";
+        }
         String EISBE = Util.null2String(mid.get("aqkc"));//安全库存
         String MABST = Util.null2String(mid.get("zdkcsl"));//最大库存数量
         String DISGR = Util.null2String(mid.get("mrpz"));//MRP组
@@ -146,7 +152,13 @@ public class MasterMaterialAction extends BaseBean implements Action {
         }else if ("1".equals(pcgl)){
             XCHAR = "X";
         }
-        String KORDB = Util.null2String(mid.get("yqd"));//源清单（选择）
+        String yqd  = Util.null2String(mid.get("yqd"));//源清单（选择）
+        String KORDB = null;
+        if ("0".equals(yqd)){
+            KORDB = "";
+        }else if ("1".equals(yqd)){
+            KORDB = "X";
+        }
         String BSTMI = Util.null2String(mid.get("zxpldx"));//最小批量大小
         String BSTRF = Util.null2String(mid.get("srz"));//舍入值
         String PLIFZ = Util.null2String(mid.get("jhjhsjt"));//计划交货时间
@@ -261,6 +273,7 @@ public class MasterMaterialAction extends BaseBean implements Action {
         detailtObject.put("WERKS",WERKS);//工厂
         detailtObject.put("DISPO",DISPO);//MRP控制者
         detailtObject.put("LGPRO",LGPRO);//生产仓储地点
+        detailtObject.put("LGORT",LGPRO);
         detailtObject.put("RGEKZ",RGEKZ);//反冲
         detailtObject.put("EISBE",EISBE);//安全库存
         detailtObject.put("MABST",MABST);//最大库存数量
@@ -289,15 +302,22 @@ public class MasterMaterialAction extends BaseBean implements Action {
         detailtObject.put("PRCTR",PRCTR);//利润中心
         detailtObject.put("ZPLP1",ZPLP1);//计划价格1
 
+        detailtObject.put("HKMAT","X");
         jsonArray.add(detailtObject);
+        JSONObject typeObject = new JSONObject();
+        typeObject.put("I_SOUSYS","OA");
+        JSONArray typeArray = new JSONArray();
+        typeArray.add(typeObject);
         System.out.println(jsonArray);
+        jsonObj.put("IM_BASEINFO",typeArray);
         jsonObj.put("IT_MAR",jsonArray);
         String shuju = jsonObj.toString();
         JSONObject result;
         try {
             result= CommonUtil.Post(CommonUtil.masterMaterialUrl,shuju);
-            requestInfo.getRequestManager().setMessage(result.getString("E_MSG"));
+            //requestInfo.getRequestManager().setMessage(result.getString("E_MSG"));
             JSONArray reArray = result.getJSONArray("ET_RETURN");
+            System.out.println(reArray);
             JSONObject reData = reArray.getJSONObject(0);
             String ecode = reData.getString("CODE");
             if ("S".equals(ecode)){
