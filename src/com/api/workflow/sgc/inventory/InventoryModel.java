@@ -162,5 +162,32 @@ public class InventoryModel {
                 this.ZCYSL = ZCYSL;
             }
         }
+
+        @Override
+        public String toString() {
+            return "InventoryDetail{" +
+                    "ZPDIT='" + ZPDIT + '\'' +
+                    ", MATNR='" + MATNR + '\'' +
+                    ", MAKTX='" + MAKTX + '\'' +
+                    ", WERKS='" + WERKS + '\'' +
+                    ", LGORT='" + LGORT + '\'' +
+                    ", CHARG='" + CHARG + '\'' +
+                    ", MEINS='" + MEINS + '\'' +
+                    ", BUCHM='" + BUCHM + '\'' +
+                    ", MENGE='" + MENGE + '\'' +
+                    ", ZCYSL='" + ZCYSL + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "InventoryModel{" +
+                "id='" + id + '\'' +
+                ", USERNO='" + USERNO + '\'' +
+                ", USERNAME='" + USERNAME + '\'' +
+                ", IBLNR='" + IBLNR + '\'' +
+                ", DETAILS=" + DETAILS +
+                '}';
     }
 }

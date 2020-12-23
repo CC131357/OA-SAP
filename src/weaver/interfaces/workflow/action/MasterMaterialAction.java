@@ -21,13 +21,7 @@ import java.util.Map;
  * 物料主数据创建
  */
 
-
 public class MasterMaterialAction extends BaseBean implements Action {
-
-    /**
-     * @作者：高梦利
-     * @流程名称 员工借款流程
-     */
     @Override
     public String execute(RequestInfo requestInfo) {
         JSONObject jsonObj =new JSONObject();
@@ -53,7 +47,7 @@ public class MasterMaterialAction extends BaseBean implements Action {
         String ZKDDW = Util.null2String(mid.get("kddw"));//宽度单位
         String ZGDDW = Util.null2String(mid.get("gddw"));//高度单位
         String ZBZGG = Util.null2String(mid.get("bzgg"));//包装规格
-        String ZSHHD = Util.null2String(mid.get("sfht"));//是否含铜
+        String ZSHHD = Util.null2String(mid.get("sfht"));//是否含铜(选择)
         String ZBANH = Util.null2String(mid.get("bh"));//板厚
         String ZBHGC = Util.null2String(mid.get("bhgc"));//板厚公差
         String ZTONH = Util.null2String(mid.get("sth"));//上铜厚
@@ -130,7 +124,13 @@ public class MasterMaterialAction extends BaseBean implements Action {
         String WERKS = Util.null2String(mid.get("gc"));//工厂
         String DISPO  = Util.null2String(mid.get("mrpkzz"));//MRP控制者
         String LGPRO = Util.null2String(mid.get("scccdd"));//生产仓储地点
-        String RGEKZ = Util.null2String(mid.get("fc"));//反冲
+        String fc  = Util.null2String(mid.get("fc"));//反冲
+        String RGEKZ=null;
+        if ("0".equals(fc)){
+            RGEKZ = "";
+        }else if ("1".equals(fc)){
+            RGEKZ = "1";
+        }
         String EISBE = Util.null2String(mid.get("aqkc"));//安全库存
         String MABST = Util.null2String(mid.get("zdkcsl"));//最大库存数量
         String DISGR = Util.null2String(mid.get("mrpz"));//MRP组
@@ -145,14 +145,20 @@ public class MasterMaterialAction extends BaseBean implements Action {
         String DISLS = Util.null2String(mid.get("pil"));//批量
 
         String EKGRP = Util.null2String(mid.get("cgz"));//采购组
-        String pcgl  = Util.null2String(mid.get("pcgl"));//批次管理
+        String pcgl  = Util.null2String(mid.get("pcgl"));//批次管理(选择)
         String XCHAR = null;
         if ("0".equals(pcgl)){
             XCHAR = "";
         }else if ("1".equals(pcgl)){
             XCHAR = "X";
         }
-        String KORDB = Util.null2String(mid.get("yqd"));//源清单
+        String yqd  = Util.null2String(mid.get("yqd"));//源清单（选择）
+        String KORDB = null;
+        if ("0".equals(yqd)){
+            KORDB = "";
+        }else if ("1".equals(yqd)){
+            KORDB = "X";
+        }
         String BSTMI = Util.null2String(mid.get("zxpldx"));//最小批量大小
         String BSTRF = Util.null2String(mid.get("srz"));//舍入值
         String PLIFZ = Util.null2String(mid.get("jhjhsjt"));//计划交货时间
@@ -267,6 +273,7 @@ public class MasterMaterialAction extends BaseBean implements Action {
         detailtObject.put("WERKS",WERKS);//工厂
         detailtObject.put("DISPO",DISPO);//MRP控制者
         detailtObject.put("LGPRO",LGPRO);//生产仓储地点
+        detailtObject.put("LGORT",LGPRO);
         detailtObject.put("RGEKZ",RGEKZ);//反冲
         detailtObject.put("EISBE",EISBE);//安全库存
         detailtObject.put("MABST",MABST);//最大库存数量
@@ -295,15 +302,22 @@ public class MasterMaterialAction extends BaseBean implements Action {
         detailtObject.put("PRCTR",PRCTR);//利润中心
         detailtObject.put("ZPLP1",ZPLP1);//计划价格1
 
+        detailtObject.put("HKMAT","X");
         jsonArray.add(detailtObject);
+        JSONObject typeObject = new JSONObject();
+        typeObject.put("I_SOUSYS","OA");
+        JSONArray typeArray = new JSONArray();
+        typeArray.add(typeObject);
         System.out.println(jsonArray);
+        jsonObj.put("IM_BASEINFO",typeArray);
         jsonObj.put("IT_MAR",jsonArray);
         String shuju = jsonObj.toString();
         JSONObject result;
         try {
             result= CommonUtil.Post(CommonUtil.masterMaterialUrl,shuju);
-            requestInfo.getRequestManager().setMessage(result.getString("E_MSG"));
+            //requestInfo.getRequestManager().setMessage(result.getString("E_MSG"));
             JSONArray reArray = result.getJSONArray("ET_RETURN");
+            System.out.println(reArray);
             JSONObject reData = reArray.getJSONObject(0);
             String ecode = reData.getString("CODE");
             if ("S".equals(ecode)){
