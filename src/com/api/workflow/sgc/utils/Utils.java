@@ -1,10 +1,11 @@
 package com.api.workflow.sgc.utils;
 
+import com.weaver.general.BaseBean;
 import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestService;
 import weaver.workflow.webservices.WorkflowRequestTableField;
 
-public class Utils {
+public class Utils extends BaseBean{
 
     /**返回成功状态*/
     public final static String SUCCESS = "1";
@@ -27,6 +28,7 @@ public class Utils {
             }
             return workflowNo;
         } catch (Exception e){
+            this.writeLog(e.getMessage());
             e.printStackTrace();
             return workflowNo;
         }
@@ -40,4 +42,5 @@ public class Utils {
         temp.setEdit(true);
         return temp;
     }
+
 }

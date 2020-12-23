@@ -44,6 +44,7 @@ public class InventoryService {
         if(null==userModel){
             apiResult.setStateCode(Utils.FAILURE);
             apiResult.setMsg("查无此用户");
+            utils.writeLog("查无此用户  " + model);
             return apiResult;
         }
 
@@ -65,15 +66,19 @@ public class InventoryService {
             String requestId= new WorkflowServiceImpl().doCreateWorkflowRequest(requestInfo,userModel.getId());
             if(Integer.parseInt(requestId) > 0){
                 apiResult.setStateCode(Utils.SUCCESS);
-                apiResult.setMsg("workflowNo:"+ utils.getWorkflowNo(requestId,"liucbh"));
+                String workflowNo = utils.getWorkflowNo(requestId,"liucbh");
+                apiResult.setMsg("workflowNo:"+ workflowNo);
+                utils.writeLog("流程创建成功！requestId = " + requestId + "workflowNo:"+ workflowNo + "  " + model);
             } else{
                 apiResult.setStateCode(Utils.FAILURE);
                 apiResult.setMsg("流程创建失败！requestId = " + requestId);
+                utils.writeLog("流程创建失败！requestId = " + requestId + "  " + model);
             }
         }catch(Exception ex){
             ex.printStackTrace();
             apiResult.setStateCode(Utils.FAILURE);
             apiResult.setMsg(ex.getMessage());
+            utils.writeLog("程序出错！" + ex.getMessage() + model);
         }
         return apiResult;
     }
