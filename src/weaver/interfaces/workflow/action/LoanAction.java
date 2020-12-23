@@ -73,8 +73,6 @@ public class LoanAction extends BaseBean implements Action {
             e.printStackTrace();
         }
         JSONObject database = JSONObject.parseObject(data);
-        /*String e_code = database.getString("E_CODE");
-        JSONArray et_data = database.getJSONArray("ET_DATA");*/
         String e_code = database.getString("E_CODE");
         if ("S".equals(e_code)){
             //表示数据传输成功，正常提交
