@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.finance.weixin.toolkit.DataRow;
+import com.google.common.base.Strings;
 import com.weaver.general.Util;
 import okhttp3.*;
 import weaver.general.BaseBean;
@@ -25,16 +26,21 @@ public class PurchaseAction extends BaseBean implements Action  {
         for(int i=0;i<detailtable.getRowCount();i++){
             Row r=detailtable.getRow(i);
             Hashtable<String,String> ht=new Hashtable<>();
+            ht.put("REQUESTID",flowNo);
+            ht.put("AFNAM",AFNAM);
+            ht.put("ZOAMXID",r.getId());
+            ht.put("BSART","NB");//采购申请类型，默认值NB
             for(Cell c:r.getCell()){
                 switch (c.getName()){
-                    case "id":
-                        ht.put("ZOAMXID",c.getValue());
-                        break;
                     case "materialCode"://物料编码
                         ht.put("MATNR",c.getValue());
                         break;
                     case "kmlb"://科目类别
-                        ht.put("KNTTP",c.getValue());
+                        String kmlb="";
+                        if("0".equals(c.getValue())){
+                            kmlb="K";
+                        }
+                        ht.put("KNTTP",kmlb);
                         break;
                     case "costCenter"://成本中心
                         ht.put("KOSTL",c.getValue());
@@ -74,9 +80,9 @@ public class PurchaseAction extends BaseBean implements Action  {
             JSONObject jsonResult = data.getJSONObject(0);
             String code= jsonResult.getString("E_CODE");
             requestInfo.getRequestManager().setMessage(jsonResult.getString("E_MSG"));
-            if(code.equals("S")){
+            if("S".equals(code)){
                 return SUCCESS;
-            }else if(code.equals("E")){
+            }else if("E".equals(code)){
                 return FAILURE_AND_CONTINUE;
             }
         } catch (IOException e) {
