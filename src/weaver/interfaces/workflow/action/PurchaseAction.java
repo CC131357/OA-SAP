@@ -29,7 +29,7 @@ public class PurchaseAction extends BaseBean implements Action  {
             ht.put("REQUESTID",flowNo);
             ht.put("AFNAM",AFNAM);
             ht.put("ZOAMXID",r.getId());
-            ht.put("BSART","NB");//采购申请类型，默认值NB
+            ht.put("BSART","ZR04");//采购申请类型，默认值ZR04
             for(Cell c:r.getCell()){
                 switch (c.getName()){
                     case "materialCode"://物料编码
