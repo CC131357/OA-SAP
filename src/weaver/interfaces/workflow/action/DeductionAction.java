@@ -123,7 +123,7 @@ public class DeductionAction extends BaseBean implements Action {
         System.out.println(vbapArray);
         jsonObj.put("IT_VBAP",vbapArray);//添加第二个
         /**
-         * 创建非关联扣款订单和扣款凭证（即销售组织是香港，工厂是深圳）
+         * 创建非关联扣款订单和扣款凭证
          */
         if (WERKS.equals("1000")&&VKORG.equals("1000")){//如果销售组织和工厂都是深圳，
             vbakObject.put("VTWEG",VTWEG);//分销渠道
@@ -138,6 +138,7 @@ public class DeductionAction extends BaseBean implements Action {
                 e.printStackTrace();
             }
             String e_code = database.getString("E_CODE");
+            requestInfo.getRequestManager().setMessage(database.getString("E_MSG"));
             /**
              * 获取扣款订单创建结果，开始创建凭证
              */
@@ -205,12 +206,14 @@ public class DeductionAction extends BaseBean implements Action {
                 if (kklx.equals("0")) {
                     if ("CNY".equals(WAERK)) {//如果货币是人民币，会生成两张借方凭证，一张贷方凭证
                         double zje = Double.parseDouble(WRBTR);//字符串转数字
-                        double jine1 = zje * 0.13;
+                        double shui = zje/1.13*0.13;
+                        double jine1 = (double)Math.round(shui*100)/100;
                         double jine2 = zje - jine1;
-                        detail1.put("HKONT", "2221010602");//总账科目1
-                        detail1.put("WRBTR", jine1);//借款金额1
+                        detail1.put("HKONT", "2221010602");//总账科目(税费)
+                        detail1.put("WRBTR", jine1);//税额
+                        detail1.put("MWSKZ","X2");
                         detail3.put("BUKRS", BUKRS);//公司代码
-                        detail2.put("HKONT","1122010201");//总账科目
+                        detail2.put("HKONT","1122010201");//总账科目(借方)
                         detail3.put("BUDAT", strDate);//凭证中的过账日期
                         detail3.put("BLDAT", strDate);//凭证中的凭证日期
                         detail3.put("BLART", "DG");//凭证类型
@@ -218,9 +221,10 @@ public class DeductionAction extends BaseBean implements Action {
                         detail3.put("XBLNR", E_VBELN);//参考凭证编号
                         detail3.put("WAERS", WAERK);//货币
                         detail3.put("BSCHL", "40");//过账码
-                        detail3.put("HKONT", "6001020000");//总账科目2
-                        detail3.put("WRBTR", jine2);//借款金额2
+                        detail3.put("HKONT", "6001020000");//总账科目（应收）
+                        detail3.put("WRBTR", jine2);//借款金额(应收)
                         detail3.put("SGTXT",BKTXT);//文本
+                        detail3.put("MWSKZ","X2");//文本
                         detailArray.add(detail1);
                         detailArray.add(detail2);
                         detailArray.add(detail3);
@@ -241,6 +245,7 @@ public class DeductionAction extends BaseBean implements Action {
                     e.printStackTrace();
                 }
                 String sz_e_code = reSZ.getString("E_CODE");
+                requestInfo.getRequestManager().setMessage(reSZ.getString("E_MSG"));
                 /**
                  * 获取扣款订单创建结果，开始创建凭证
                  */
@@ -268,6 +273,7 @@ public class DeductionAction extends BaseBean implements Action {
                 e.printStackTrace();
             }
             String e_code = database.getString("E_CODE");
+            requestInfo.getRequestManager().setMessage(database.getString("E_MSG"));
             /**
              * 获取扣款订单创建结果，开始创建凭证
              */
@@ -329,6 +335,7 @@ public class DeductionAction extends BaseBean implements Action {
                     e.printStackTrace();
                 }
                 String v_e_code = reData.getString("E_CODE");
+                requestInfo.getRequestManager().setMessage(reData.getString("E_MSG"));
                 if ("S".equals(v_e_code)){
                     //表示第一张凭证创建成功，可以开始生成第二张凭证
                     System.out.println("成功");
@@ -348,6 +355,7 @@ public class DeductionAction extends BaseBean implements Action {
                         e.printStackTrace();
                     }
                     String v_e_code2 = reData2.getString("E_CODE");
+                    requestInfo.getRequestManager().setMessage(reData2.getString("E_MSG"));
                     if ("S".equals(v_e_code2)) {
                         //表示数据传输成功，正常提交
                         System.out.println("成功");
@@ -371,7 +379,7 @@ public class DeductionAction extends BaseBean implements Action {
                         detail21.put("BSCHL", "40");//过账码
                         detail21.put("KUNNR", "");//客户代码
                         detail21.put("WRBTR", WRBTR);//凭证金额
-                        //detail21.put("KOSTL","1000106");//香港客服组成本中心
+                        //detail21.put("KOSTL","1000106");//客服组成本中心
                         detail21.put("SGTXT",BKTXT);
                         //凭证第二条数据(应收账款)
                         detail22.put("BUKRS", "1000");//公司代码
@@ -391,30 +399,36 @@ public class DeductionAction extends BaseBean implements Action {
                         }
                         if (kklx.equals("1")) {//选择PCBA
                             detail21.put("HKONT", "6601012510");//总账科目
+                            detail21.put("KOSTL","1000106");//客服组成本中心
                             detail22.put("HKONT", "2241030600");//贷方总账科目
                         }
                         if (kklx.equals("2")) {//选择商品修理
                             detail21.put("HKONT", "6601012520");//总账科目1
+                            detail21.put("KOSTL","1000106");//客服组成本中心
                             detail22.put("HKONT", "2241030600");//贷方总账科目2
                         }
                         if (kklx.equals("3")) {//选择运费
                             detail21.put("HKONT", "6601012530");//总账科目1
+                            detail21.put("KOSTL","1000106");//客服组成本中心
                             detail22.put("HKONT", "2241030600");//贷方总账科目3
                         }
                         detailArray2.add(detail21);//添加借方数据
                         detailArray2.add(detail22);//添加贷方数据
                         voucher2.put("IT_DATA", detailArray2);
                         String shuju3 = voucher2.toString();
-                        JSONObject reData3 = null;
                         try {
-                            reData3 = CommonUtil.Post(CommonUtil.voucherUrl,shuju3);//请求扣款订单接口
+                            JSONObject reData3 = CommonUtil.Post(CommonUtil.voucherUrl,shuju3);//请求扣款订单接口
+                            String v_e_code3 = reData3.getString("E_CODE");
+                            requestInfo.getRequestManager().setMessage(reData3.getString("E_MSG"));
+                            if (v_e_code3.equals("S")){
+                                return SUCCESS;
+                            }else {
+                                return FAILURE_AND_CONTINUE;
+                            }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            printLog(requestInfo, "扣款",e.getMessage());
                         }
-                        String v_e_code3 = reData3.getString("E_CODE");
-                        if (v_e_code3.equals("S")){
-                            return SUCCESS;
-                        }
+
                     }
                 }
             }
@@ -444,6 +458,16 @@ public class DeductionAction extends BaseBean implements Action {
             m.put( p.getName(), p.getValue());
         }
         return m;
+    }
+    /**输出打印信息*/
+    private void printLog(RequestInfo requestInfo, String msg, String returnMsg){
+        writeLog(msg +
+                "创建人【"+requestInfo.getCreatorid()+"】" +
+                "流程id【"+requestInfo.getWorkflowid()+"】" +
+                "流程请求id【"+requestInfo.getRequestid()+"】" +
+                "当前节点【"+requestInfo.getRequestManager().getNodeid()+"】" +
+                "请求标题【"+requestInfo.getRequestManager().getRequestname()+"】"+
+                "返回信息或者请求信息【"+ returnMsg +"】");
     }
 }
 
