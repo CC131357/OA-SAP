@@ -38,13 +38,14 @@ public class TrainfeeAction extends BaseBean implements Action {
         //获取明细表信息
         DetailTable[] detailtable = requestInfo.getDetailTableInfo().getDetailTable();// 获取所有明细表
         JSONArray detailArray = new JSONArray();
+        JSONObject detailtObject = new JSONObject();
         for(int i = 0; i < detailtable.length; i ++){
             DetailTable dt = detailtable[i];// 指定明细表
             Row[] s = dt.getRow();// 当前明细表的所有数据,按行存储
             if (s.length>0) {
                 Row r = s[0];// 指定第一行
                 Cell c[] = r.getCell();// 第一行数据再按列存储
-                JSONObject detailtObject = new JSONObject();
+
                 for (int k = 0; k < c.length; k++) {
                     Cell c1 = c[k];// 指定列
                     String name = c1.getName();// 明细字段名称
