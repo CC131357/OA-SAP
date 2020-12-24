@@ -34,7 +34,7 @@ public class MasterMaterialAction extends BaseBean implements Action {
         //String WAERS = Util.null2String(mid.get("wlzms")); //物料组描述
         String MAKTX = Util.null2String(mid.get("wlms"));//物料描述
         String MEINS = Util.null2String(mid.get("jbjldw")); //基本计量单位
-
+        String ZWLCM = Util.null2String(mid.get("wlmscwb"));//物料长描述
         String SPART = Util.null2String(mid.get("cpz")); //产品组
         String EXTWG = Util.null2String(mid.get("wbwlz")); //外部物料组
         //String LIFNR = Util.null2String(mid.get("wllxms")); //物料类型描述
@@ -189,6 +189,7 @@ public class MasterMaterialAction extends BaseBean implements Action {
         detailtObject.put("MTART",MTART);//物料类型大类
         detailtObject.put("MATKL",MATKL);//物料组小类
         detailtObject.put("MAKTX",MAKTX);//物料描述
+        detailtObject.put("ZWLCM",ZWLCM);//物料描述
         detailtObject.put("MEINS",MEINS);//基本计量单位
         detailtObject.put("SPART",SPART);//产品组
         detailtObject.put("EXTWG",EXTWG);//外部物料组
@@ -320,6 +321,7 @@ public class MasterMaterialAction extends BaseBean implements Action {
             System.out.println(reArray);
             JSONObject reData = reArray.getJSONObject(0);
             String ecode = reData.getString("CODE");
+            requestInfo.getRequestManager().setMessage(reData.getString("MESSAGE"));
             if ("S".equals(ecode)){
                 String MATNR = reData.getString("MATNR");//物料编码
                 // 定义MySQL的数据库驱动程序
