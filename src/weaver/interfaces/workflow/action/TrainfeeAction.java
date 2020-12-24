@@ -89,6 +89,7 @@ public class TrainfeeAction extends BaseBean implements Action {
         }
         JSONObject database = JSONObject.parseObject(data);
         String e_code = database.getString("E_CODE");
+        String e_msg = database.getString("E_MSG");
 
         if ("S".equals(e_code)){
             //表示数据传输成功，正常提交
@@ -98,7 +99,7 @@ public class TrainfeeAction extends BaseBean implements Action {
             //数据传输失败，则将错误信息返回到页面
             JSONArray et_data = database.getJSONArray("ET_DATA");
             requestInfo.getRequestManager().setMessageid("99999");
-            requestInfo.getRequestManager().setMessagecontent("执行节点附件操作失败！"+et_data);
+            requestInfo.getRequestManager().setMessagecontent("执行节点附件操作失败！"+e_msg.toString());
             return "333";
         }
     }
