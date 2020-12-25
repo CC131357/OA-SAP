@@ -35,7 +35,7 @@ public class LoanAction extends BaseBean implements Action {
         String WAERS = Util.null2String(mid.get("hbm")); //货币
         String BUKRS = Util.null2String(mid.get("gsdm"));//公司代码
         String ZDJLX = Util.null2String(mid.get("djlx"));//单据类型
-        String HKONT = Util.null2String(mid.get("zzkm"));//总账科目
+        String HKONT = Util.null2String(mid.get("hjkm"));//总账科目-会计科目
 
 
         JSONArray jsonArray = new JSONArray();
