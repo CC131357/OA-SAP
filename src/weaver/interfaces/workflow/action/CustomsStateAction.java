@@ -21,7 +21,7 @@ public class CustomsStateAction extends BaseBean implements Action {
         String auditDate,auditState;
         Property[] properties= requestInfo.getMainTableInfo().getProperty();
         Map<String, String> propertyMap=CommonUtil.getPropertyMap(properties);
-        String flowNo=propertyMap.get("lcbh");
+        String flowNo=propertyMap.get("liucbh");
         String formNo=propertyMap.get("formNo");
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
         Date d= new Date();

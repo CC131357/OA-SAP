@@ -23,7 +23,7 @@ public class PurchaseAction extends BaseBean implements Action  {
         String AFNAM= Util.null2String(propertyMap.get("sqr"));  //申请人
         HrmService hrmService=new HrmService();
         UserModel u= hrmService.getUserById(AFNAM);
-        String flowNo=propertyMap.get("lcbh");
+        String flowNo=propertyMap.get("liucbh");
         DetailTable detailtable = requestInfo.getDetailTableInfo().getDetailTable()[0];// 获取明细表
         JSONObject jsonObject =new JSONObject();
         JSONArray detailArr=new JSONArray();
