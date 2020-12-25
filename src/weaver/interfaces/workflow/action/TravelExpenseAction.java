@@ -42,7 +42,7 @@ public class TravelExpenseAction extends BaseBean implements Action  {
                 Map<String, String> mainTableInfo = util.getMainTableMap(requestInfo);
                 JSONObject detailtObject = util.setJsonObject(s[j], columnMap);
 
-                detailtObject.put("BUKRS",Util.null2String(mainTableInfo.get("gongs")));//公司
+                detailtObject.put("BUKRS",Util.null2String(mainTableInfo.get("gsdm")));//公司代码
                 detailtObject.put("ZOADJ",Util.null2String(mainTableInfo.get("liucbh")));//OA单据编号
                 detailtObject.put("ZDJLX",Util.null2String(mainTableInfo.get("djlx")));//票据类型
 
