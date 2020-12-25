@@ -12,20 +12,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Map;
 
 
 public class CustomsStateAction extends BaseBean implements Action {
     @Override
     public String execute(RequestInfo requestInfo) {
-        String requestId = requestInfo.getRequestid();
-        String formNo="",auditDate,auditState;
+        String auditDate,auditState;
         Property[] properties= requestInfo.getMainTableInfo().getProperty();
-        for (Property p:properties){
-            if(p.getName().equals("formNo")){
-                formNo=p.getValue();
-                break;
-            }
-        }
+        Map<String, String> propertyMap=CommonUtil.getPropertyMap(properties);
+        String flowNo=propertyMap.get("lcbh");
+        String formNo=propertyMap.get("formNo");
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
         Date d= new Date();
         auditDate = sdf.format(d);
@@ -37,7 +34,7 @@ public class CustomsStateAction extends BaseBean implements Action {
         }
         Hashtable<String,String> ht=new Hashtable<>();
         ht.put("IV_ZSQDH",formNo);
-        ht.put("IV_ZOABH",requestId);
+        ht.put("IV_ZOABH",flowNo);
         ht.put("IV_ZSPRQ",auditDate);
         ht.put("IV_ZSPZT",auditState);
         String body=JSONObject.toJSONString(ht);
