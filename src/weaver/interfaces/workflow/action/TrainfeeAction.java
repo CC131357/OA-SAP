@@ -33,6 +33,7 @@ public class TrainfeeAction extends BaseBean implements Action {
         String ZDJLX = Util.null2String(mid.get("djlx")); //单据类型--报销
         String ZLSCH = Util.null2String(mid.get("fkfs"));//付款方式
         String BVTYP = Util.null2String(mid.get("zhxz")); //账户选择类型
+        String HKONT = Util.null2String(mid.get("zzkm")); //总账科目—会计科目
         String WRBTR = Util.null2String(mid.get("hjjermb")); //报销合计金额（人民币）
 
         //获取明细表信息
@@ -62,6 +63,8 @@ public class TrainfeeAction extends BaseBean implements Action {
                 detailtObject.put("ZDJLX", ZDJLX);//单据类型
                 detailtObject.put("BVTYP", BVTYP);//账户选择
                 detailtObject.put("ZLSCH", ZLSCH);//付款方式
+                detailtObject.put("HKONT", HKONT);//总账科目—会计科目
+
                 detailtObject.put("WRBTR", WRBTR);//报销金额合计
             }
         }

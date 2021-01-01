@@ -30,4 +30,26 @@ public class HrmService {
         }
         return u;
     }
+    public UserModel getUserById(String id){
+        UserModel u=null;
+        try {
+            RecordSetDataSource rsds = new RecordSetDataSource("OA");
+            rsds.executeSql("select id,loginid,lastname,joblevel,jobtitle,seclevel,departmentid,subcompanyid1 from hrmresource where id='"+id+"'");
+            if(rsds.next()){
+                u=new UserModel();
+                u.setId(Util.getIntValue(rsds.getString("id"),0));
+                u.setLoginId(rsds.getString("loginid"));
+                u.setUserName(rsds.getString("lastname"));
+                u.setJobLevel(rsds.getString("joblevel"));
+                u.setDepartmentId(rsds.getString("departmentid"));
+                u.setSubCompanyId1(rsds.getString("subcompanyid1"));
+                u.setJobTitle(rsds.getString("jobtitle"));
+                u.setSecLevel(rsds.getString("seclevel"));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            writeLog(ex);
+        }
+        return u;
+    }
 }

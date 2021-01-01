@@ -3,6 +3,8 @@ package weaver.interfaces.workflow.action;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.api.workflow.sgc.hrm.HrmService;
+import com.api.workflow.sgc.hrm.UserModel;
 import com.finance.weixin.toolkit.DataRow;
 import com.google.common.base.Strings;
 import com.weaver.general.Util;
@@ -19,7 +21,9 @@ public class PurchaseAction extends BaseBean implements Action  {
         //获取主表信息、初始化主表
         Map<String, String> propertyMap=CommonUtil.getPropertyMap(requestInfo.getMainTableInfo().getProperty());
         String AFNAM= Util.null2String(propertyMap.get("sqr"));  //申请人
-        String flowNo=propertyMap.get("lcbh");
+        HrmService hrmService=new HrmService();
+        UserModel u= hrmService.getUserById(AFNAM);
+        String flowNo=propertyMap.get("liucbh");
         DetailTable detailtable = requestInfo.getDetailTableInfo().getDetailTable()[0];// 获取明细表
         JSONObject jsonObject =new JSONObject();
         JSONArray detailArr=new JSONArray();
@@ -27,8 +31,8 @@ public class PurchaseAction extends BaseBean implements Action  {
             Row r=detailtable.getRow(i);
             Hashtable<String,String> ht=new Hashtable<>();
             ht.put("REQUESTID",flowNo);
-            ht.put("AFNAM",AFNAM);
-            ht.put("ZOAMXID",r.getId());
+            ht.put("AFNAM",u.getLoginId());
+            ht.put("ZOAMXID",String.valueOf(i+1));
             ht.put("BSART","ZR04");//采购申请类型，默认值ZR04
             for(Cell c:r.getCell()){
                 switch (c.getName()){

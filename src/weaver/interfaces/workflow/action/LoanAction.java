@@ -28,12 +28,15 @@ public class LoanAction extends BaseBean implements Action {
         Map<String, String> mid=getPropertyMap(requestInfo.getMainTableInfo().getProperty());
 
         String ZOADJ=Util.null2String(mid.get("liucbh")); //流程编号
-        String ZDJLX = "Z004"; //票据类型_借支的编码为Z004
+  /*      String ZDJLX = "Z004"; //票据类型_借支的编码为Z004*/
         String WRBTR=Util.null2String(mid.get("bencjkje")); //本次借款金额
         String LIFNR = Util.null2String(mid.get("zh")); //借款人开户行
         String BVTYP = Util.null2String(mid.get("zhxz")); //借款人银行账号
         String WAERS = Util.null2String(mid.get("hbm")); //货币
         String BUKRS = Util.null2String(mid.get("gsdm"));//公司代码
+        String ZDJLX = Util.null2String(mid.get("djlx"));//单据类型
+        String HKONT = Util.null2String(mid.get("zzkm"));//总账科目-会计科目
+
 
         JSONArray jsonArray = new JSONArray();
         JSONObject detailtObject = new  JSONObject();
@@ -45,9 +48,10 @@ public class LoanAction extends BaseBean implements Action {
         detailtObject.put("BVTYP",BVTYP);
         detailtObject.put("WAERS",WAERS);
         detailtObject.put("BUKRS",BUKRS);
+        detailtObject.put("HKONT",HKONT);
 
         jsonArray.add(detailtObject);
-        System.out.println(jsonArray);
+//        System.out.println(jsonArray);
 
         jsonObj.put("IT_DATA",jsonArray);
         String shuju = jsonObj.toString();
