@@ -10,6 +10,10 @@ import com.weaver.general.Util;
 import weaver.soa.workflow.request.*;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,9 +25,18 @@ import java.util.Map;
  * @流程名称 退货扣款订单创建流程
  */
 public class DeductionAction extends BaseBean implements Action {
+    // 定义MySQL的数据库驱动程序
+    final String DBDRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver" ;
+    // 定义MySQL数据库的连接地址
+    final String DBURL = "jdbc:sqlserver://192.168.0.30:1433;DatabaseName=ecology" ;
+    // MySQL数据库的连接用户名
+    final String DBUSER = "bin" ;
+    // MySQL数据库的连接密码
+    final String DBPASS = "wdhbb2016" ;
     //public static final String REQUESTPATH = "http://10.10.10.32:50000/RESTAdapter/OA/S0008PaymentSOCreate";
     @Override
     public String execute(RequestInfo requestInfo) {
+        String requestId = requestInfo.getRequestid();
         JSONObject jsonObj =new JSONObject();
         jsonObj.put( "I_TESTRUN","");
         //获取主表信息、初始化主表
@@ -82,11 +95,11 @@ public class DeductionAction extends BaseBean implements Action {
         String ABRVW = null;
         String BKTXT = null;//参考凭证文本
         if (kklx.equals("0")){
-            ABRVW = "A";//PCB扣款
+            ABRVW = "B";//PCB扣款
             BKTXT = strDate1+"PCB扣款";
         }
         if (kklx.equals("1")){
-            ABRVW = "B";//PCBA扣款
+            ABRVW = "A";//PCBA扣款
             BKTXT =strDate1+ "PCBA扣款";
         }
         if (kklx.equals("2")){
@@ -147,6 +160,21 @@ public class DeductionAction extends BaseBean implements Action {
                 System.out.println("成功");
                 //获取扣款订单号
                 String E_VBELN = database.getString("E_VBELN");
+                try {
+                    Connection conn = null ;        // 数据库连接
+                    Statement stmt = null ;            // 数据库操作
+                    Class.forName(DBDRIVER) ;    // 加载驱动程序
+                    String sql = "UPDATE formtable_main_275 SET kkdh1='"+E_VBELN+"' where requestId='"+requestId+"'";
+                    conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
+                    stmt = conn.createStatement() ;    // 实例化Statement对象
+                    stmt.executeUpdate(sql) ;        // 执行数据库更新操作
+                    stmt.close() ;                    // 关闭操作
+                    conn.close() ;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 JSONObject voucher = new JSONObject();//凭证数据结构
                 JSONArray detailArray = new JSONArray();
                 //凭证第一条数
@@ -183,7 +211,7 @@ public class DeductionAction extends BaseBean implements Action {
                     detail1.put("HKONT", "6601012510");//总账科目1
                     detail1.put("KOSTL","1000106");//深圳成本中心
                     detail1.put("WRBTR", WRBTR);//借款金额
-                    detail2.put("HKONT", "2241030100");//贷方总账科目1
+                    detail2.put("HKONT", "2241030200");//贷方总账科目1
                     detailArray.add(detail1);
                     detailArray.add(detail2);
                 }
@@ -191,7 +219,7 @@ public class DeductionAction extends BaseBean implements Action {
                     detail1.put("HKONT", "6601012520");//总账科目1
                     detail1.put("KOSTL","1000106");//深圳成本中心
                     detail1.put("WRBTR", WRBTR);//借款金额
-                    detail2.put("HKONT", "2241030100");//贷方总账科目2
+                    detail2.put("HKONT", "2241030200");//贷方总账科目2
                     detailArray.add(detail1);
                     detailArray.add(detail2);
                 }
@@ -199,7 +227,7 @@ public class DeductionAction extends BaseBean implements Action {
                     detail1.put("HKONT", "6601012530");//总账科目1
                     detail1.put("KOSTL","1000106");//深圳成本中心
                     detail1.put("WRBTR", WRBTR);//借款金额
-                    detail2.put("HKONT", "2241030100");//贷方总账科目3
+                    detail2.put("HKONT", "2241030200");//贷方总账科目3
                     detailArray.add(detail1);
                     detailArray.add(detail2);
                 }
@@ -246,10 +274,26 @@ public class DeductionAction extends BaseBean implements Action {
                 }
                 String sz_e_code = reSZ.getString("E_CODE");
                 requestInfo.getRequestManager().setMessage(reSZ.getString("E_MSG"));
+                String E_BELNR = reSZ.getString("E_BELNR");
                 /**
                  * 获取扣款订单创建结果，开始创建凭证
                  */
                 if ("S".equals(sz_e_code)) {
+                    try {
+                        Connection conn = null ;        // 数据库连接
+                        Statement stmt = null ;            // 数据库操作
+                        Class.forName(DBDRIVER) ;    // 加载驱动程序
+                        String sql = "UPDATE formtable_main_275 SET hjpz1='"+E_BELNR+"' where requestId='"+requestId+"'";
+                        conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
+                        stmt = conn.createStatement() ;    // 实例化Statement对象
+                        stmt.executeUpdate(sql) ;        // 执行数据库更新操作
+                        stmt.close() ;                    // 关闭操作
+                        conn.close() ;
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     return SUCCESS;
                 }
             }
@@ -282,6 +326,21 @@ public class DeductionAction extends BaseBean implements Action {
                 System.out.println("成功");
                 //获取扣款订单号
                 String E_VBELN = database.getString("E_VBELN");
+                try {
+                    Connection conn = null ;        // 数据库连接
+                    Statement stmt = null ;            // 数据库操作
+                    Class.forName(DBDRIVER) ;    // 加载驱动程序
+                    String sql = "UPDATE formtable_main_275 SET kkdh1='"+E_VBELN+"' where requestId='"+requestId+"'";
+                    conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
+                    stmt = conn.createStatement() ;    // 实例化Statement对象
+                    stmt.executeUpdate(sql) ;        // 执行数据库更新操作
+                    stmt.close() ;                    // 关闭操作
+                    conn.close() ;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 JSONObject voucher = new JSONObject();//凭证数据结构
                 JSONArray detailArray = new JSONArray();
                 JSONObject detail1 = new JSONObject();//记账码1
@@ -336,12 +395,28 @@ public class DeductionAction extends BaseBean implements Action {
                 }
                 String v_e_code = reData.getString("E_CODE");
                 requestInfo.getRequestManager().setMessage(reData.getString("E_MSG"));
+                String E_BELNR = reData.getString("E_BELNR");
                 if ("S".equals(v_e_code)){
                     //表示第一张凭证创建成功，可以开始生成第二张凭证
+                    try {
+                        Connection conn = null ;        // 数据库连接
+                        Statement stmt = null ;            // 数据库操作
+                        Class.forName(DBDRIVER) ;    // 加载驱动程序
+                        String sql = "UPDATE formtable_main_275 SET hjpz1='"+E_BELNR+"' where requestId='"+requestId+"'";
+                        conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
+                        stmt = conn.createStatement() ;    // 实例化Statement对象
+                        stmt.executeUpdate(sql) ;        // 执行数据库更新操作
+                        stmt.close() ;                    // 关闭操作
+                        conn.close() ;
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     System.out.println("成功");
                     //return SUCCESS;
                     /**
-                     * 创建第二张扣款凭证
+                     * 创建第二张扣款
                      */
                     vbakObject.put("VTWEG","30");//分销渠道
                     vbakObject.put("VKORG","1000");//销售组织
@@ -361,6 +436,21 @@ public class DeductionAction extends BaseBean implements Action {
                         System.out.println("成功");
                         //获取扣款订单号
                         String E_VBELN2 = reData2.getString("E_VBELN");
+                        try {
+                            Connection conn = null ;        // 数据库连接
+                            Statement stmt = null ;            // 数据库操作
+                            Class.forName(DBDRIVER) ;    // 加载驱动程序
+                            String sql = "UPDATE formtable_main_275 SET kkdh2='"+E_VBELN2+"' where requestId='"+requestId+"'";
+                            conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
+                            stmt = conn.createStatement() ;    // 实例化Statement对象
+                            stmt.executeUpdate(sql) ;        // 执行数据库更新操作
+                            stmt.close() ;                    // 关闭操作
+                            conn.close() ;
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
                         JSONObject voucher2 = new JSONObject();//凭证数据结构
                         JSONArray detailArray2 = new JSONArray();
                         //凭证第一条数
@@ -400,17 +490,17 @@ public class DeductionAction extends BaseBean implements Action {
                         if (kklx.equals("1")) {//选择PCBA
                             detail21.put("HKONT", "6601012510");//总账科目
                             detail21.put("KOSTL","1000106");//客服组成本中心
-                            detail22.put("HKONT", "2241030600");//贷方总账科目
+                            detail22.put("HKONT", "2241030200");//贷方总账科目
                         }
                         if (kklx.equals("2")) {//选择商品修理
                             detail21.put("HKONT", "6601012520");//总账科目1
                             detail21.put("KOSTL","1000106");//客服组成本中心
-                            detail22.put("HKONT", "2241030600");//贷方总账科目2
+                            detail22.put("HKONT", "2241030200");//贷方总账科目2
                         }
                         if (kklx.equals("3")) {//选择运费
                             detail21.put("HKONT", "6601012530");//总账科目1
                             detail21.put("KOSTL","1000106");//客服组成本中心
-                            detail22.put("HKONT", "2241030600");//贷方总账科目3
+                            detail22.put("HKONT", "2241030200");//贷方总账科目3
                         }
                         detailArray2.add(detail21);//添加借方数据
                         detailArray2.add(detail22);//添加贷方数据
@@ -420,7 +510,23 @@ public class DeductionAction extends BaseBean implements Action {
                             JSONObject reData3 = CommonUtil.Post(CommonUtil.voucherUrl,shuju3);//请求扣款订单接口
                             String v_e_code3 = reData3.getString("E_CODE");
                             requestInfo.getRequestManager().setMessage(reData3.getString("E_MSG"));
+                            String hjpz2 = reData3.getString("E_BELNR");
                             if (v_e_code3.equals("S")){
+                                try {
+                                    Connection conn = null ;        // 数据库连接
+                                    Statement stmt = null ;            // 数据库操作
+                                    Class.forName(DBDRIVER) ;    // 加载驱动程序
+                                    String sql = "UPDATE formtable_main_275 SET hjpz2='"+hjpz2+"' where requestId='"+requestId+"'";
+                                    conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
+                                    stmt = conn.createStatement() ;    // 实例化Statement对象
+                                    stmt.executeUpdate(sql) ;        // 执行数据库更新操作
+                                    stmt.close() ;                    // 关闭操作
+                                    conn.close() ;
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (SQLException throwables) {
+                                    throwables.printStackTrace();
+                                }
                                 return SUCCESS;
                             }else {
                                 return FAILURE_AND_CONTINUE;
