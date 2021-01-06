@@ -96,7 +96,7 @@ public class PaymentService {
     WorkflowRequestTableRecord[] generateMainRecord(ApplyModel model,UserModel userModel){//主表添加信息方法
         WorkflowRequestTableRecord[] records=new WorkflowRequestTableRecord[1];//主表只有一条数据，
         records[0]=new WorkflowRequestTableRecord();
-        WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[19];//创建主表字段存储数组
+        WorkflowRequestTableField[] tableFields=new WorkflowRequestTableField[20];//创建主表字段存储数组
         //业务信息
         tableFields[0]= Utils.generateFeild("zfdz",model.getMethod());
         tableFields[1]= Utils.generateFeild("fkdh",model.getPaymentNo());
@@ -104,24 +104,25 @@ public class PaymentService {
         tableFields[3]=Utils.generateFeild("ysqjez",model.getUsedAmount());
         tableFields[4]=Utils.generateFeild("ksqjez",model.getBalance());
         tableFields[5]=Utils.generateFeild("sqjez",model.getAmount());
-        tableFields[6]=Utils.generateFeild("bb",model.getCurrency());
+        tableFields[6]=Utils.generateFeild("sqjedx",model.getAmount());
+        tableFields[7]=Utils.generateFeild("bb",model.getCurrency());
         //供应商信息
-        tableFields[7]=Utils.generateFeild("gyssap",model.getSupplierNo());
-        tableFields[8]=Utils.generateFeild("skzhsap",model.getAccountNo());
-        tableFields[9]=Utils.generateFeild("khxsap",model.getBankName());
-        tableFields[10]=Utils.generateFeild("skdwsap",model.getSupplierName());
-        tableFields[11]=Utils.generateFeild("fktk",model.getPaymentProvision());
-        tableFields[12]=Utils.generateFeild("fkfs",model.getPaymentType());
+        tableFields[8]=Utils.generateFeild("gyssap",model.getSupplierNo());
+        tableFields[9]=Utils.generateFeild("skzhsap",model.getAccountNo());
+        tableFields[10]=Utils.generateFeild("khxsap",model.getBankName());
+        tableFields[11]=Utils.generateFeild("skdwsap",model.getSupplierName());
+        tableFields[12]=Utils.generateFeild("fktk",model.getPaymentProvision());
+        tableFields[13]=Utils.generateFeild("fkfs",model.getPaymentType());
         //表头部分字段
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd" );
         Date d= new Date();
         String strDate = sdf.format(d);
-        tableFields[13]=Utils.generateFeild("shenqr",userModel.getId().toString());
-        tableFields[14]=Utils.generateFeild("zhij",userModel.getJobLevel());
-        tableFields[15]=Utils.generateFeild("gangw",userModel.getJobTitle());
-        tableFields[16]=Utils.generateFeild("shenqrq",strDate);
-        tableFields[17]=Utils.generateFeild("bum",userModel.getDepartmentId());
-        tableFields[18]=Utils.generateFeild("gongs",userModel.getSubCompanyId1());
+        tableFields[14]=Utils.generateFeild("shenqr",userModel.getId().toString());
+        tableFields[15]=Utils.generateFeild("zhij",userModel.getJobLevel());
+        tableFields[16]=Utils.generateFeild("gangw",userModel.getJobTitle());
+        tableFields[17]=Utils.generateFeild("shenqrq",strDate);
+        tableFields[18]=Utils.generateFeild("bum",userModel.getDepartmentId());
+        tableFields[19]=Utils.generateFeild("gongs",userModel.getSubCompanyId1());
         records[0].setWorkflowRequestTableFields(tableFields);
         return records;
     }
