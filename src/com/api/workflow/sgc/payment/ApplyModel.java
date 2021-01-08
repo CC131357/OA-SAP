@@ -4,6 +4,16 @@ import java.util.List;
 
 public class ApplyModel {
     private String userNo;
+
+    public String getCompanyNo() {
+        return companyNo;
+    }
+
+    public void setCompanyNo(String companyNo) {
+        this.companyNo = companyNo;
+    }
+
+    private String companyNo;
     /*
     SAP信息
      */
