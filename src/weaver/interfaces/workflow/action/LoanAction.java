@@ -60,7 +60,7 @@ public class LoanAction extends BaseBean implements Action {
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), shuju);
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
+                .addHeader("Authorization", "Basic WlBPVVNFUk9BOjFxYXpAV1NYM2VkYzw+")
                 .url(reimbursementUrl)
                 .post(body)
                 .build();
@@ -86,6 +86,7 @@ public class LoanAction extends BaseBean implements Action {
             //数据传输失败，则将错误信息返回到页面
             JSONArray et_data = database.getJSONArray("ET_DATA");
             JSONObject et_datainfo = et_data.getJSONObject(0);
+            requestInfo.getRequestManager().setMessage(et_datainfo.getString("MEG"));
             writeLog("员工借款接口回传信息," +
                     "创建人【"+requestInfo.getCreatorid()+"】" +
                     "流程id【"+requestInfo.getWorkflowid()+"】" +

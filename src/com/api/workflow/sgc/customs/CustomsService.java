@@ -21,7 +21,7 @@ import java.util.List;
 @Path("/workflow/customs")
 public class CustomsService {
     /*海关申报与运费申请流程ID*/
-    final String CUSTOMSWFID="1389";
+    final String CUSTOMSWFID="1420";
     RequestService requestService = new RequestService();
     @POST
     @Path("/createApply")

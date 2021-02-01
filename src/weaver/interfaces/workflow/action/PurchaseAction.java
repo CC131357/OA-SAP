@@ -31,7 +31,7 @@ public class PurchaseAction extends BaseBean implements Action  {
             Row r=detailtable.getRow(i);
             Hashtable<String,String> ht=new Hashtable<>();
             ht.put("REQUESTID",flowNo);
-            ht.put("AFNAM",u.getLoginId());
+            ht.put("AFNAM",u.getUserName());
             ht.put("ZOAMXID",String.valueOf(i+1));
             ht.put("BSART","ZR04");//采购申请类型，默认值ZR04
             for(Cell c:r.getCell()){

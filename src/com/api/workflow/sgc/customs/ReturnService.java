@@ -21,7 +21,7 @@ import java.util.Date;
 @Path("/workflow/finance")
 public class ReturnService {
     /*退货扣款申请流程ID*/
-    final String CUSTOMSWFID="1418";
+    final String CUSTOMSWFID="1423";
     @POST
     @Path("/createReturn")
     @Produces(MediaType.APPLICATION_JSON)

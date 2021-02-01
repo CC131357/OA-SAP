@@ -28,11 +28,11 @@ public class DeductionAction extends BaseBean implements Action {
     // 定义MySQL的数据库驱动程序
     final String DBDRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver" ;
     // 定义MySQL数据库的连接地址
-    final String DBURL = "jdbc:sqlserver://192.168.0.30:1433;DatabaseName=ecology" ;
+    final String DBURL = "jdbc:sqlserver://192.168.0.48:1433;DatabaseName=ecology" ;
     // MySQL数据库的连接用户名
-    final String DBUSER = "bin" ;
+    final String DBUSER = "sa" ;
     // MySQL数据库的连接密码
-    final String DBPASS = "wdhbb2016" ;
+    final String DBPASS = "kbdyn2015" ;
     //public static final String REQUESTPATH = "http://10.10.10.32:50000/RESTAdapter/OA/S0008PaymentSOCreate";
     @Override
     public String execute(RequestInfo requestInfo) {
@@ -164,7 +164,7 @@ public class DeductionAction extends BaseBean implements Action {
                     Connection conn = null ;        // 数据库连接
                     Statement stmt = null ;            // 数据库操作
                     Class.forName(DBDRIVER) ;    // 加载驱动程序
-                    String sql = "UPDATE formtable_main_275 SET kkdh1='"+E_VBELN+"' where requestId='"+requestId+"'";
+                    String sql = "UPDATE formtable_main_284 SET kkdh1='"+E_VBELN+"' where requestId='"+requestId+"'";
                     conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
                     stmt = conn.createStatement() ;    // 实例化Statement对象
                     stmt.executeUpdate(sql) ;        // 执行数据库更新操作
@@ -283,7 +283,7 @@ public class DeductionAction extends BaseBean implements Action {
                         Connection conn = null ;        // 数据库连接
                         Statement stmt = null ;            // 数据库操作
                         Class.forName(DBDRIVER) ;    // 加载驱动程序
-                        String sql = "UPDATE formtable_main_275 SET hjpz1='"+E_BELNR+"' where requestId='"+requestId+"'";
+                        String sql = "UPDATE formtable_main_284 SET hjpz1='"+E_BELNR+"' where requestId='"+requestId+"'";
                         conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
                         stmt = conn.createStatement() ;    // 实例化Statement对象
                         stmt.executeUpdate(sql) ;        // 执行数据库更新操作
@@ -330,7 +330,7 @@ public class DeductionAction extends BaseBean implements Action {
                     Connection conn = null ;        // 数据库连接
                     Statement stmt = null ;            // 数据库操作
                     Class.forName(DBDRIVER) ;    // 加载驱动程序
-                    String sql = "UPDATE formtable_main_275 SET kkdh1='"+E_VBELN+"' where requestId='"+requestId+"'";
+                    String sql = "UPDATE formtable_main_284 SET kkdh1='"+E_VBELN+"' where requestId='"+requestId+"'";
                     conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
                     stmt = conn.createStatement() ;    // 实例化Statement对象
                     stmt.executeUpdate(sql) ;        // 执行数据库更新操作
@@ -374,7 +374,7 @@ public class DeductionAction extends BaseBean implements Action {
                     detail1.put("BSCHL", "21");//过账码
                     detail1.put("HKONT", "2202010000");
                     detail2.put("HKONT", "6401010100");
-                    detail2.put("KOSTL","1010106");//6开头的添加成本中心
+                    //detail2.put("KOSTL","1010106");//6开头的添加成本中心
                     detail2.put("BSCHL", "50");//过账码
                 }
                 if (kklx.equals("1")||kklx.equals("2")||kklx.equals("3")) {//选择其他
@@ -402,7 +402,7 @@ public class DeductionAction extends BaseBean implements Action {
                         Connection conn = null ;        // 数据库连接
                         Statement stmt = null ;            // 数据库操作
                         Class.forName(DBDRIVER) ;    // 加载驱动程序
-                        String sql = "UPDATE formtable_main_275 SET hjpz1='"+E_BELNR+"' where requestId='"+requestId+"'";
+                        String sql = "UPDATE formtable_main_284 SET hjpz1='"+E_BELNR+"' where requestId='"+requestId+"'";
                         conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
                         stmt = conn.createStatement() ;    // 实例化Statement对象
                         stmt.executeUpdate(sql) ;        // 执行数据库更新操作
@@ -440,7 +440,7 @@ public class DeductionAction extends BaseBean implements Action {
                             Connection conn = null ;        // 数据库连接
                             Statement stmt = null ;            // 数据库操作
                             Class.forName(DBDRIVER) ;    // 加载驱动程序
-                            String sql = "UPDATE formtable_main_275 SET kkdh2='"+E_VBELN2+"' where requestId='"+requestId+"'";
+                            String sql = "UPDATE formtable_main_284 SET kkdh2='"+E_VBELN2+"' where requestId='"+requestId+"'";
                             conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
                             stmt = conn.createStatement() ;    // 实例化Statement对象
                             stmt.executeUpdate(sql) ;        // 执行数据库更新操作
@@ -516,7 +516,7 @@ public class DeductionAction extends BaseBean implements Action {
                                     Connection conn = null ;        // 数据库连接
                                     Statement stmt = null ;            // 数据库操作
                                     Class.forName(DBDRIVER) ;    // 加载驱动程序
-                                    String sql = "UPDATE formtable_main_275 SET hjpz2='"+hjpz2+"' where requestId='"+requestId+"'";
+                                    String sql = "UPDATE formtable_main_284 SET hjpz2='"+hjpz2+"' where requestId='"+requestId+"'";
                                     conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
                                     stmt = conn.createStatement() ;    // 实例化Statement对象
                                     stmt.executeUpdate(sql) ;        // 执行数据库更新操作

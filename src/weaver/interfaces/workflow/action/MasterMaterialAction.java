@@ -35,6 +35,7 @@ public class MasterMaterialAction extends BaseBean implements Action {
         String MAKTX = Util.null2String(mid.get("wlms"));//物料描述
         String MEINS = Util.null2String(mid.get("jbjldw")); //基本计量单位
         String ZWLCM = Util.null2String(mid.get("wlmscwb"));//物料长描述
+        String ZYTSS = Util.null2String(mid.get("yt"));//  新增用途
         String SPART = Util.null2String(mid.get("cpz")); //产品组
         String EXTWG = Util.null2String(mid.get("wbwlz")); //外部物料组
         //String LIFNR = Util.null2String(mid.get("wllxms")); //物料类型描述
@@ -189,7 +190,8 @@ public class MasterMaterialAction extends BaseBean implements Action {
         detailtObject.put("MTART",MTART);//物料类型大类
         detailtObject.put("MATKL",MATKL);//物料组小类
         detailtObject.put("MAKTX",MAKTX);//物料描述
-        detailtObject.put("ZWLCM",ZWLCM);//物料描述
+        detailtObject.put("ZWLCM",ZWLCM);//物料长描述
+        detailtObject.put("ZYTSS",ZYTSS);//新增用途说明
         detailtObject.put("MEINS",MEINS);//基本计量单位
         detailtObject.put("SPART",SPART);//产品组
         detailtObject.put("EXTWG",EXTWG);//外部物料组
@@ -327,17 +329,17 @@ public class MasterMaterialAction extends BaseBean implements Action {
                 // 定义MySQL的数据库驱动程序
                 final String DBDRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver" ;
                 // 定义MySQL数据库的连接地址
-                final String DBURL = "jdbc:sqlserver://192.168.0.30:1433;DatabaseName=ecology" ;
+                final String DBURL = "jdbc:sqlserver://192.168.0.48:1433;DatabaseName=ecology" ;
                 // MySQL数据库的连接用户名
-                final String DBUSER = "bin" ;
+                final String DBUSER = "sa" ;
                 // MySQL数据库的连接密码
-                final String DBPASS = "wdhbb2016" ;
+                final String DBPASS = "kbdyn2015" ;
                 // 所有的异常抛出
                 try {
                     Connection conn = null ;        // 数据库连接
                     Statement stmt = null ;            // 数据库操作
                     Class.forName(DBDRIVER) ;    // 加载驱动程序
-                    String sql = "UPDATE formtable_main_271 SET wlbm='"+MATNR+"' where requestId='"+requestId+"'";
+                    String sql = "UPDATE formtable_main_279 SET wlbm='"+MATNR+"' where requestId='"+requestId+"'";
                     conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
                     stmt = conn.createStatement() ;    // 实例化Statement对象
                     stmt.executeUpdate(sql) ;        // 执行数据库更新操作

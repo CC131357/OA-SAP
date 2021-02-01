@@ -75,7 +75,7 @@ public class TrainfeeAction extends BaseBean implements Action {
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), shuju);
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Basic WlBPVVNFUjoxcWF6QFdTWA==")
+                .addHeader("Authorization", "Basic WlBPVVNFUk9BOjFxYXpAV1NYM2VkYzw+")
                 .url(reimbursementUrl)
                 .post(body)
                 .build();
@@ -102,6 +102,8 @@ public class TrainfeeAction extends BaseBean implements Action {
         }else{
             //数据传输失败，则将错误信息返回到页面
             JSONArray et_data = database.getJSONArray("ET_DATA");
+            JSONObject et_datainfo = et_data.getJSONObject(0);
+            requestInfo.getRequestManager().setMessage(et_datainfo.getString("MEG"));
             requestInfo.getRequestManager().setMessageid("99999");
             requestInfo.getRequestManager().setMessagecontent("执行节点附件操作失败！"+e_msg.toString());
             return "333";

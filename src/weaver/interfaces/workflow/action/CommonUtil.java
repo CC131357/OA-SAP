@@ -14,7 +14,7 @@ import weaver.soa.workflow.request.RequestInfo;
 import weaver.soa.workflow.request.Row;
 
 public class CommonUtil extends BaseBean {
-    private final static String baseUrl="http://10.10.10.32:50000/RESTAdapter/";
+    private final static String baseUrl="http://10.10.10.31:50000/RESTAdapter/";
     //授权
     public final static String authorization="Basic WlBPVVNFUjoxcWF6QFdTWA==";
     //海关
@@ -43,6 +43,8 @@ public class CommonUtil extends BaseBean {
     public final static String inventoryDiffUrl=baseUrl + "OA/S0051IvtryDiffApproveUpdate";
     //物料主数据创建
     public final static String masterMaterialUrl=baseUrl + "SW/MaterialModify";
+    //供应商主数据维护
+    public final static String supplierMaterialUrl=baseUrl + "OA/S0041VMModify";
 
     public static JSONObject Post(String url, String content) throws IOException,JSONException{
         OkHttpClient client = new OkHttpClient();

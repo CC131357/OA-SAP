@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * @author gongchen
- * @流程名称
+ * @流程名称 物料主数据创建物料描述规则唯一性验证
  */
 public class DataCheckAction extends BaseBean implements Action {
     @Override

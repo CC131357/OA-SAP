@@ -1,5 +1,6 @@
 package weaver.interfaces.workflow.action;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.weaver.general.BaseBean;
@@ -49,15 +50,12 @@ public class TravelExpenseAction extends BaseBean implements Action  {
                 detailtObject.put("LIFNR",Util.null2String(mainTableInfo.get("gyshzqrzh")));//供应商或者债权人的账号
                 detailtObject.put("BVTYP",Util.null2String(mainTableInfo.get("zhxz")));//账户选择，收款人账号
                 detailtObject.put("ZLSCH",Util.null2String(mainTableInfo.get("fukfs")));//付款方式，付款方式
-
-                if(i == detailTable.length - 2 && j == s.length - 1){
-                    detailtObject.put("ZJZKK",getLoanMoney(detailTable) + "");//借支金额，费用报销
-                } else{
-                    detailtObject.put("ZJZKK","0");//借支金额
-                }
+                detailtObject.put("ZJZKK","0");//借支金额，费用报销
                 detailArray.add(detailtObject);
             }
         }
+        JSONObject firstObject = detailArray.getJSONObject(0);
+        firstObject.put("ZJZKK",getLoanMoney(detailTable));
         jsonObj.put("IT_DATA",detailArray);
         return jsonObj.toString();
     }
@@ -96,8 +94,9 @@ public class TravelExpenseAction extends BaseBean implements Action  {
     /**获得冲销金额*/
     private int getLoanMoney(DetailTable[] detailTable){
         int loan = 0;
-        DetailTable loanDt = detailTable[detailTable.length - 1];
+        DetailTable loanDt = detailTable[3];
         Row[] sDt = loanDt.getRow();// 当前明细表的所有数据,按行存储
+        int rowLen = sDt.length;
         for (int j = 0; j < sDt.length; j++) {
             Row r = sDt[j];// 指定行
             Cell c[] = r.getCell();// 每行数据再按列存储
@@ -112,6 +111,4 @@ public class TravelExpenseAction extends BaseBean implements Action  {
         }
         return loan;
     }
-
-
 }
